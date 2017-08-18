@@ -1,0 +1,23 @@
+{
+    "name": "melisa014/simple-mvc",
+    "type": "cms",
+    "description": "Пример движка MVC",
+    "keywords": ["php", "itforfree", "mvc"],
+    "homepage": "ссылкаНаДомашнююСтраницу",
+     
+    "autoload": {
+        "psr-4": {
+            "SimpleMVC\\": ""
+        }
+    },
+    
+    "require": {
+        "it-for-free/php-examples": "dev-master"
+    },
+    "repositories": [
+        {
+           "type": "vcs",
+           "url": "https://github.com/it-for-free/PhpExamples"
+        }
+    ]
+}
