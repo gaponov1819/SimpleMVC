@@ -3,7 +3,7 @@
     "type": "cms",
     "description": "Пример движка MVC",
     "keywords": ["php", "itforfree", "mvc"],
-    "homepage": "ссылкаНаДомашнююСтраницу",
+    "homepage": "http://fkn.ktu10.com/?q=forum/133",
      
     "autoload": {
         "psr-4": {
@@ -12,12 +12,12 @@
     },
     
     "require": {
-        "it-for-free/php-examples": "dev-master"
+        "it-for-free/php-examples": "master"
     },
     "repositories": [
         {
            "type": "vcs",
            "url": "https://github.com/it-for-free/PhpExamples"
-        }
+        }   
     ]
 }
