@@ -1,5 +1,5 @@
 <?php
-namespace core;
+namespace ItForFree\SimpleMVC\components;
 
 /**
  * Класс для работы с данными пользователя
