@@ -1,6 +1,9 @@
 <?php
 
-namespace core\mvc;
+namespace ItForFree\SimpleMVC\classes\mvc;
+
+use ItForFree\SimpleMVC\Config as Config;
+
 /**
  * Модель -- используя конфиг, как минимум подключается к базе данных и даёт 
  * потомкам работать с соединением
@@ -28,6 +31,7 @@ class Model
                 \Config::$db_password,
                 array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        Config::$options['core'];
     }
    
     /**
