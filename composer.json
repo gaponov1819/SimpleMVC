@@ -13,12 +13,16 @@
     
     "require": {
         "it-for-free/php-examples": "dev-master",
-        "adbario/php-dot-notation": "*"
+        "it-for-free/rusphp": "dev-master"
     },
     "repositories": [
         {
            "type": "vcs",
            "url": "https://github.com/it-for-free/PhpExamples"
-        }   
+        },
+        {
+           "type": "vcs",
+           "url": "https://github.com/it-for-free/rusphp"
+        }
     ]
 }
