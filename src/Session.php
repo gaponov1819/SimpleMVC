@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace ItForFree\SimpleMVC;
 
 /**
  * Класс для работы с массивом $_SESSION

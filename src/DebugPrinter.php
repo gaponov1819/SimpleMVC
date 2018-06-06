@@ -1,5 +1,5 @@
 <?php
-namespace core;
+namespace ItForFree\SimpleMVC;
 
 class DebugPrinter
 {

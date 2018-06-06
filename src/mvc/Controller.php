@@ -1,6 +1,6 @@
 <?php
 
-namespace core\mvc;
+namespace ItForFree\SimpleMVC\mvc;
 /**
  * Базовый класс для работы с конроллерами
  */

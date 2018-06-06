@@ -1,5 +1,5 @@
 <?php
-namespace core\mvc\view;
+namespace ItForFree\SimpleMVC\mvc\view;
 
 /**
  * Класс для разбора URL

@@ -1,6 +1,6 @@
 <?php
 
-namespace core\mvc\view;
+namespace ItForFree\SimpleMVC\mvc\view;
 /**
  * Элементарный класс для работы с представлениями
  * -- позволят отделить HTML от PHP 

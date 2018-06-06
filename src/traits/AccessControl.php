@@ -1,5 +1,5 @@
 <?php
-namespace core\traits;
+namespace ItForFree\SimpleMVC\traits;
 
 /* 
  * Система контроля доступа

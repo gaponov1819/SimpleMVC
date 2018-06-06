@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace ItForFree\SimpleMVC;
 
 /**
  * Класс для загрузки файлов
