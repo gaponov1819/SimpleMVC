@@ -3,17 +3,10 @@ namespace ItForFree\SimpleMVC;
 
 /**
  * Класс-хранилище настроек проекта
+ * этот класс будет синглтоном?
  */
-class Config
+class Config extends
 {
-    public static $options = [
-        'core' => [ // подмассив используемые самим ядром фреймворка
-            'db' => [
-                'dns' => 'mysql:host=localhost;dbname=dbname',
-                'username' => 'root',
-                'password' => '1234'
-            ]
-        ]
-    ];
+
  
 }

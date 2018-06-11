@@ -1,13 +1,19 @@
 <?php
 namespace ItForFree\SimpleMVC;
 
+use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
+
 /**
  * Класс-"точка входа" для работы фреймворка SimpleMVC
  */
 class Application
 {
     
-
+    
+    
+    public function __construct($config) {
+        ;
+    }
     /**
      * Запускает приложение
      * 
