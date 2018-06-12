@@ -53,7 +53,7 @@ class Application
             
             
             $route = $this->getConfigObject('core.url.class')->getRoute();
-            $Router = new Router($route);
+            (new Router())->callControllerAction($route);
             
         } else {
             throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
