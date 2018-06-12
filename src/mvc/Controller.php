@@ -6,7 +6,7 @@ namespace ItForFree\SimpleMVC\mvc;
  */
 class Controller 
 {
-    use \core\traits\AccessControl;
+    use \ItForFree\SimpleMVC\traits\AccessControl;
     
     /**
      * @var object Хранит экземпляр класса View

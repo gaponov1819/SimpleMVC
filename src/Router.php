@@ -17,8 +17,8 @@ class Router
      */
     public function callControllerAction($route)
     {
-        $controllersName = "\\application\\controllers\\" . self::getControllerClassName($route);
-        $controller = new $controllersName();
+        $controllerName = "\\application\\controllers\\" . self::getControllerClassName($route);
+        $controller = new $controllerName();
         $controller->callAction($route);
         
         return $this;
