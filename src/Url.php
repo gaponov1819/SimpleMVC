@@ -14,9 +14,7 @@ class Url
         $getValue = isset($_GET['route'] ) ? $_GET['route'] : "";
         return $getValue;
     }
-    
-   
-            
+         
     public static function link($route)
     {
         $path = "/index.php?route=$route"; 

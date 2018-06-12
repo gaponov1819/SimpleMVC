@@ -2,53 +2,27 @@
 namespace ItForFree\SimpleMVC;
 
 /**
- * Класс-маршрутизатор
+ * Класс-маршрутизатор, его задача по переданной строке (предположительно это какой-то адресе на сайте),
+ * определить какой контролеер и какое действие надо вызывать.
  */
 
 class Router
 {
-    /**
-     * Передаёт управление разным контроллерам в зависимости от URL
-     */
-    public function __construct($route)
-    {
-//        \DebugPrinter::debug($_SESSION['username']);
-//        echo "<br>";
-        
-        // тут тоже относительный адрес пространства был -- спасало только то, что сам класс в корневом пространстве
-        $controllersName = "\\application\\controllers\\". self::getControllerClassName($route);
-        
-       // $methodsName = $this->getControllerActionName($action);
 
-//        echo $controllersName;   
-        
+    /**
+     * Вызовет дейсвтие контроллера
+     * 
+     * @param srting $route Любая стока по которой можно определить вызываемый контроллер (класс) и его действие (метод)
+     * @return $this
+     */
+    public function callControllerAction($route)
+    {
+        $controllersName = "\\application\\controllers\\" . self::getControllerClassName($route);
         $controller = new $controllersName();
-        
-//        \DebugPrinter::debug($controller);
-       // die();
         $controller->callAction($route);
         
+        return $this;
     }
-    
-    /**
-     * Простой вариант поиска имени класса
-     */
-//    public static function getControllerClassName($route)
-//    {
-//        $result = 'Homepage';
-//                
-//        $urlFragments = explode('/', $route);
-//        if (!empty($urlFragments[0])) {
-//            
-//            $firstletterToUp = ucwords($urlFragments[0]);
-////            \DebugPrinter::debug($firstletterToUp);
-//            
-//            $result = $firstletterToUp;
-//        } 
-//         
-//        return $result. "Controller";
-//    }
-    
     
     
     public static function getControllerClassName($route)

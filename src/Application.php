@@ -3,6 +3,7 @@ namespace ItForFree\SimpleMVC;
 
 use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
 use ItForFree\SimpleMVC\exceptions\SmvcCoreException;
+use ItForFree\SimpleMVC\Router;
 
 /**
  * Класс-"точка входа" для работы фреймворка SimpleMVC
@@ -17,7 +18,7 @@ class Application
      * 
      * @var ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot
      */
-    public $config = null;
+    protected $config = null;
     
     
     /**
@@ -50,8 +51,9 @@ class Application
         
         if (!empty($this->config)) {
             
-            $route = \core\mvc\view\Url::getRoute();
-            $obj = new \core\Router($route);
+            
+            $route = $this->getConfigObject('core.url.class')->getRoute();
+            $Router = new Router($route);
             
         } else {
             throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
@@ -66,5 +68,34 @@ class Application
     {
         $this->config = new Dot($config);
         return $this;
+    }
+    
+
+    /**
+     * Вернёт элемент из массива конфигурации приложения
+     * 
+     * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
+     * @return type
+     */
+    public static function getConfigElement($inConfigArrayPath)
+    {
+        if ($this->config) {
+            throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
+        }
+        
+        $configValue = Application::get()->config($inConfigArrayPath);
+        return $configValue;
+    }
+    
+    /**
+     * Создаст и вернёт объект по его имени из массива
+     * 
+     * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
+     * @return type
+     */
+    public function getConfigObject($inConfigArrayPath)
+    {
+        $configValue = self::config($inConfigArrayPath);
+        return (new $configValue);
     }
 }
