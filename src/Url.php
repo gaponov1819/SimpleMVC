@@ -1,8 +1,8 @@
 <?php
-namespace ItForFree\SimpleMVC\mvc\view;
+namespace ItForFree\SimpleMVC;
 
 /**
- * Класс для разбора URL
+ * Класс для работы с URL и формирования ссылок
  */
 class Url
 {
@@ -11,8 +11,8 @@ class Url
      */
     public static function getRoute()
     {
-        $act = isset( $_GET['route'] ) ? $_GET['route'] : "";
-        return $act;
+        $getValue = isset($_GET['route'] ) ? $_GET['route'] : "";
+        return $getValue;
     }
     
    
