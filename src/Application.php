@@ -79,7 +79,7 @@ class Application
      */
     public static function getConfigElement($inConfigArrayPath)
     {
-        if (self::$config) {
+        if (self::get()->config) {
             throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
         }
         
