@@ -1,7 +1,7 @@
 <?php
 namespace ItForFree\SimpleMVC\exceptions;
 
-class SmvcCoreException extends SmvcException
+class SmvcException extends \Exception
 {
     // Переопределим исключение так, что параметр message станет обязательным
     public function __construct($message, $code = 0, Exception $previous = null) {
@@ -13,7 +13,7 @@ class SmvcCoreException extends SmvcException
 
     // Переопределим строковое представление объекта.
     public function __toString() {
-        return __CLASS__ . ": [!] Ошибка ядра SimpleMVC [{$this->code}]: {$this->message}\n";
+        return __CLASS__ . ": [!] SimpleMVC [{$this->code}]: {$this->message}\n";
     }
 
 }

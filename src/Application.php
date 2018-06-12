@@ -2,7 +2,7 @@
 namespace ItForFree\SimpleMVC;
 
 use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
-use ItForFree\SimpleMVC\exceptions\SmvcCoreException;
+use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 use ItForFree\SimpleMVC\Router;
 
 /**
@@ -80,7 +80,7 @@ class Application
     public static function getConfigElement($inConfigArrayPath)
     {
         if (self::get()->config) {
-            throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
+            throw new SmvcUsageException('Не задан конфигурационный массив приложения!');
         }
         
         $configValue = self::get()->config->get($inConfigArrayPath);
