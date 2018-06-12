@@ -1,7 +1,7 @@
 <?php
 namespace ItForFree\SimpleMVC\exceptions;
 
-class SmvcCoreException extends Exception
+class SmvcCoreException extends \Exception
 {
     // Переопределим исключение так, что параметр message станет обязательным
     public function __construct($message, $code = 0, Exception $previous = null) {
