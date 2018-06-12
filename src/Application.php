@@ -83,7 +83,7 @@ class Application
             throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
         }
         
-        $configValue = Application::get()->config($inConfigArrayPath);
+        $configValue = $Apllication::get()->config->get($inConfigArrayPath);
         return $configValue;
     }
     
