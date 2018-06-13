@@ -13,8 +13,6 @@ class Controller
      */
     public $view = null;
     
-    
-   
     /**
      * Создаёт экземпляр класса View для работы с представлениями
      */
@@ -27,10 +25,6 @@ class Controller
     public function header($path) { // 302 редирет
         header ("Location: $path");
     }
-    
-    
-    
-   
-    
+
 }
 

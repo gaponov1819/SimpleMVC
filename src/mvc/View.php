@@ -1,7 +1,7 @@
 <?php
 
 namespace ItForFree\SimpleMVC\mvc;
-use ItForFree\SimpleMVC\Application;
+use ItForFree\SimpleMVC\Config;
 
 /**
  * Элементарный класс для работы с представлениями
@@ -35,7 +35,10 @@ class View
      */
     public function __construct() {
         $this->templateBasepath = 
-            rpath(Application::getConfigElement('mvc.views.base-template-path'));
+            rpath(Config::get('mvc.views.base-template-path'));
+        $this->footerFilePath = $this->templateBasepath . 'footer.php';
+        $this->headerFilePath = $this->templateBasepath . 'header.php';
+        
     }
 
     /**
