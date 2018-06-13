@@ -4,7 +4,7 @@ namespace ItForFree\SimpleMVC\mvc;
 
 use ItForFree\SimpleMVC\Config as Config;
 use ItForFree\SimpleMVC\Application;
-
+use ItForFree\rusphp\Log\SimpleEchoLog;
 /**
  * Модель -- используя конфиг, как минимум подключается к базе данных и даёт 
  * потомкам работать с соединением
@@ -29,6 +29,7 @@ class Model
     public function __construct() 
     {
         $dbSettings = Application::getConfigElement('code.db');
+        
         $this->pdo = new \PDO($dbSettings['dns'], 
                 $dbSettings['username'],
                 $dbSettings['password'],

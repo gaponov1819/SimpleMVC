@@ -1,6 +1,8 @@
 <?php
 
-namespace ItForFree\SimpleMVC\mvc\view;
+namespace ItForFree\SimpleMVC\mvc;
+use ItForFree\SimpleMVC\Application;
+
 /**
  * Элементарный класс для работы с представлениями
  * -- позволят отделить HTML от PHP 
@@ -8,7 +10,7 @@ namespace ItForFree\SimpleMVC\mvc\view;
 class View 
 {
     /**
-     * @var string Стандартный путь к корневому каталогу 
+     * @var string Стандартный путь к корневому каталогу шаблонов (view) 
      */
     public $templateBasePath = '/';
     
@@ -21,7 +23,7 @@ class View
     /**
      * @var string Путь к общему "подвалу" сайта
      */
-    public $footerFilePath = 'footer.php';
+    public $footerFilePath = 'footer.php'; 
     
     /**
      * @var string Путь к общей "шапке" сайта
@@ -32,7 +34,10 @@ class View
      * Задаёт путь к корневому каталогу
      */
     public function __construct() {
-        $this->templateBasepath = $_SERVER['DOCUMENT_ROOT'] 
+        $this->templateBasepath = 
+            rpath(Application::getConfigElement(''));
+                
+                $_SERVER['DOCUMENT_ROOT'] 
                 . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
     }
 
@@ -48,7 +53,8 @@ class View
     }
 
     /**
-     * Формирует окончательное представление страницы. Собирает базовый HTML
+     * Формирует окончательное представление страницы. 
+     * Собирает базовый HTML
      * и индивидуальный для каждой страницы
      * 
      * @param string Путь к целевой странице
@@ -68,7 +74,8 @@ class View
     }
     
     /**
-     * Формирует частичную печать страницы. Собирает базовый HTML
+     * Формирует частичную печать страницы. 
+     * Собирает базовый HTML
      * и индивидуальный для каждой страницы
      * 
      * @param string Путь к целевой странице
@@ -77,7 +84,7 @@ class View
     {
         extract($this->vars);
                 
-        include($this->templateBasepath . $path);
+        include($this->templateBasePath . $path);
         
     }
     

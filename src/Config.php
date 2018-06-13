@@ -1,34 +1,32 @@
 <?php
 namespace ItForFree\SimpleMVC;
+use ItForFree\SimpleMVC\Application;
 
 /**
  * Класс для удобного доступа к сущностям проекта
  */
-class SMVC
+class Config
 {
     /**
      * Вернёт элемент из массива конфигурации приложения
      * 
      * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
-     * @return type
+     * @return mixed
      */
-    public static function config($inConfigArrayPath)
+    public static function get($inConfigArrayPath)
     {
-        $configValue = Application::get()->config($inConfigArrayPath);
-        return $configValue;
+        return Application::getConfigElement($inConfigArrayPath);
     }
+    
     
     /**
      * Создаст и вернёт объект по его имени из массива
      * 
      * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
-     * @return type
+     * @return mixed
      */
-    public function configObject($inConfigArrayPath)
+    public static function getObject($inConfigArrayPath)
     {
-        $configValue = self::config($inConfigArrayPath);
-        return (new $configValue);
+        return Application::getConfigObject($inConfigArrayPath);
     }
-
- 
 }

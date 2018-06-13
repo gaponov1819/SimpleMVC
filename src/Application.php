@@ -75,7 +75,7 @@ class Application
      * Вернёт элемент из массива конфигурации приложения
      * 
      * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
-     * @return type
+     * @return mixed
      */
     public static function getConfigElement($inConfigArrayPath)
     {
@@ -91,7 +91,7 @@ class Application
      * Создаст и вернёт объект по его имени из массива
      * 
      * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
-     * @return type
+     * @return mixed
      */
     public function getConfigObject($inConfigArrayPath)
     {
