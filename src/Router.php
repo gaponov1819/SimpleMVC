@@ -9,6 +9,12 @@ namespace ItForFree\SimpleMVC;
 class Router
 {
 
+   /**
+    * Имя контроллера, которое надо указывать, если иное не найдено
+    * @var string 
+    */
+   protected $defaultControllerName = 'Homepage';
+    
     /**
      * Вызовет действие контроллера, разобрав переданный маршрут
      * 
@@ -25,9 +31,9 @@ class Router
     }
     
     
-    public static function getControllerClassName($route)
+    protected static function getControllerClassName($route)
     {
-        $result = 'Homepage';
+        $result = $this->defaultControllerName;
                 
         $urlFragments = explode('/', $route);
         
