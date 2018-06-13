@@ -28,7 +28,7 @@ class Model
      */
     public function __construct() 
     {
-        $dbSettings = Application::getConfigElement('code.db');
+        $dbSettings = Application::getConfigElement('core.db');
         
         $this->pdo = new \PDO($dbSettings['dns'], 
                 $dbSettings['username'],
