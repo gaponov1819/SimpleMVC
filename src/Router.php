@@ -13,7 +13,7 @@ class Router
     * Имя контроллера, которое надо указывать, если иное не найдено
     * @var string 
     */
-   protected $defaultControllerName = 'Homepage';
+   protected static $defaultControllerName = 'Homepage';
     
     /**
      * Вызовет действие контроллера, разобрав переданный маршрут
@@ -31,9 +31,9 @@ class Router
     }
     
     
-    protected static function getControllerClassName($route)
+    public static function getControllerClassName($route)
     {
-        $result = $this->defaultControllerName;
+        $result = self::$defaultControllerName;
                 
         $urlFragments = explode('/', $route);
         
