@@ -3,7 +3,7 @@ namespace ItForFree\SimpleMVC;
 use ItForFree\SimpleMVC\Application;
 
 /**
- * Класс для удобного доступа к сущностям проекта
+ * Прокси-класс для удобного доступа к конфигурации приложения
  */
 class Config
 {
