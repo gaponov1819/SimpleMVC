@@ -35,10 +35,7 @@ class View
      */
     public function __construct() {
         $this->templateBasepath = 
-            rpath(Application::getConfigElement(''));
-                
-                $_SERVER['DOCUMENT_ROOT'] 
-                . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
+            rpath(Application::getConfigElement('mvc.views.base-template-path'));
     }
 
     /**
