@@ -153,10 +153,10 @@ class Model
     
     public function getUserId()
     {
-        if (\core\User::get()->userName !== 'guest'){
+        if (\ItForFree\SimpleMVC\User::get()->userName !== 'guest'){
             $sql = "SELECT id FROM users where login = :userName";
             $st = $this->pdo->prepare($sql); 
-            $st -> bindValue( ":userName", \core\User::get()->userName, \PDO::PARAM_STR );
+            $st -> bindValue( ":userName", \ItForFree\SimpleMVC\User::get()->userName, \PDO::PARAM_STR );
             $st -> execute();
             $row = $st->fetch();
 //            \DebugPrinter::debug($row);

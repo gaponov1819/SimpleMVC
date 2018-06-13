@@ -39,14 +39,14 @@ trait AccessControl {
             if (!empty($rules[$actionName])) {
                 if (!empty($rules[$actionName]['deny'])) {
                     foreach ($rules[$actionName]['deny'] as $k => $role) {
-                        if (\core\User::get()->role == $role) {
+                        if (\ItForFree\SimpleMVC\User::get()->role == $role) {
                             return false;
                         }
                     }
                 }   
                 if (!empty($rules[$actionName]['allow'])) {
                     foreach ($rules[$actionName]['allow'] as $k => $role) {
-                        if (\core\User::get()->role == $role) {
+                        if (\ItForFree\SimpleMVC\User::get()->role == $role) {
                             return true;
                         }
                     }
@@ -56,14 +56,14 @@ trait AccessControl {
             if (!empty($rules['all'])) {
                 if (!empty($rules['all']['deny'])) {
                     foreach ($rules['all']['deny'] as $k => $role) {
-                        if (\core\User::get()->role == $role) {
+                        if (\ItForFree\SimpleMVC\User::get()->role == $role) {
                             return false;
                         }
                     }
                 }   
                 if (!empty($rules['all']['allow'])) {
                     foreach ($rules['all']['allow'] as $k => $role) {
-                        if (\core\User::get()->role == $role) {
+                        if (\ItForFree\SimpleMVC\User::get()->role == $role) {
                             return true;
                         }
                     }
@@ -81,7 +81,7 @@ trait AccessControl {
      */
     private function isRules($route)
     {
-        $controllerClassName = "\\application\\controllers\\" . \core\Router::getControllerClassName($route);
+        $controllerClassName = "\\application\\controllers\\" . \ItForFree\SimpleMVC\Router::getControllerClassName($route);
         $controller = new $controllerClassName();
         if (!empty($controller->rules)) {
             return true;

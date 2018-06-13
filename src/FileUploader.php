@@ -38,7 +38,7 @@ class FileUploader
      */
     public function uploadToRelativePath($files, $addtionalPath)
     {
-//        \core\DebugPrinter::debug($files); die();
+//        \ItForFree\SimpleMVC\DebugPrinter::debug($files); die();
         $this->basePath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'uploads';
         
         $result = [];
@@ -55,7 +55,7 @@ class FileUploader
                      'filepath' => $addtionalPath . '/' . $fileName,
                      'filename' => $fileName
                 ];
-//                \core\DebugPrinter::debug($result);
+//                \ItForFree\SimpleMVC\DebugPrinter::debug($result);
             } else {
                 break;
             }
