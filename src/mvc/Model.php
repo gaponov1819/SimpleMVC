@@ -3,6 +3,7 @@
 namespace ItForFree\SimpleMVC\mvc;
 
 use ItForFree\SimpleMVC\Config as Config;
+use ItForFree\SimpleMVC\Application;
 
 /**
  * Модель -- используя конфиг, как минимум подключается к базе данных и даёт 
@@ -27,11 +28,13 @@ class Model
      */
     public function __construct() 
     {
-        $this->pdo = new \PDO(\Config::$db_dsn, \Config::$db_username,
-                \Config::$db_password,
-                array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
+        $dbSettings = Application::getConfigElement('code.db');
+        $this->pdo = new \PDO($dbSettings['dns'], 
+                $dbSettings['username'],
+                $dbSettings['password'],
+                array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'')
+        );
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        Config::$options['core'];
     }
    
     /**
