@@ -35,7 +35,7 @@ class View
      */
     public function __construct() {
         $this->templateBasepath = 
-            rpath(Config::get('mvc.views.base-template-path'));
+            rpath(Config::get('core.mvc.views.base-template-path'));
         $this->footerFilePath = 'footer.php';
         $this->headerFilePath = 'header.php';
         
@@ -62,7 +62,7 @@ class View
     public function render($path, $text = '')
     {
         extract($this->vars);
-                
+               
         include($this->templateBasepath . $this->headerFilePath);
         
         echo $text;

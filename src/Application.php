@@ -3,6 +3,7 @@ namespace ItForFree\SimpleMVC;
 
 use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
 use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
+use ItForFree\SimpleMVC\exceptions\SmvcConfigException;
 use ItForFree\SimpleMVC\Router;
 
 /**
@@ -84,6 +85,12 @@ class Application
         }
         
         $configValue = self::get()->config->get($inConfigArrayPath);
+        
+        if (is_null($configValue)) {
+           throw new SmvcConfigException("Элемент с данным путём [$inConfigArrayPath]"
+                   . " отсутствует в конфигурационном массиве приложения!");
+        }
+        
         return $configValue;
     }
     
