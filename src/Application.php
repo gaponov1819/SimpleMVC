@@ -5,6 +5,7 @@ use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
 use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 use ItForFree\SimpleMVC\exceptions\SmvcConfigException;
 use ItForFree\SimpleMVC\Router;
+use ItForFree\rusphp\PHP\Object\ObjectFactory;
 
 /**
  * Класс-"точка входа" для работы фреймворка SimpleMVC
@@ -103,6 +104,15 @@ class Application
     public function getConfigObject($inConfigArrayPath)
     {
         $configValue = self::getConfigElement($inConfigArrayPath);
-        return (new $configValue);
+        
+        if (!class_exists($configValue)) {
+            throw new SmvcConfigException("Вы  запросили получение экземпляра класса $configValue "
+                    . " (был добавлен в конфиг по адресу $configValue),"
+                    . " но такой класс не был ранее объеляен, "
+                    . "убедитесь чтобы его код подключен "
+                    . "до  обращения к экземпляру объекта ");
+        }
+        
+        return ObjectFactory::getInstanceOrSingletone($configValue);
     }
 }
