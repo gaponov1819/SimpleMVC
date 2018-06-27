@@ -101,7 +101,7 @@ class Application
      * @param string $inConfigArrayPath ключ в виде строки, разделёной точками -- путь в массиве
      * @return mixed
      */
-    public function getConfigObject($inConfigArrayPath)
+    public static function getConfigObject($inConfigArrayPath)
     {
         $configValue = self::getConfigElement($inConfigArrayPath);
         
