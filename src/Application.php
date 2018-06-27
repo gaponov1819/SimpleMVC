@@ -54,7 +54,7 @@ class Application
         if (!empty($this->config)) {
             
             
-            $route = $this->getConfigObject('core.url.class')->getRoute();
+            $route = $this->getConfigObject('core.url.class')::getRoute();
             (new Router())->callControllerAction($route);
             
         } else {

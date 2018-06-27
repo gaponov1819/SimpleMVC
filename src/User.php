@@ -102,13 +102,10 @@ class User extends Session
         $st->bindValue( ":login", $login, \PDO::PARAM_STR);
         $st->execute();
         $siteAuthData = $st->fetch();
-//        \DebugPrinter::debug($siteAuthData);
-//        die();
-        
+   
         $pass .= $siteAuthData['salt'];
         $passForCheck = password_verify($pass, $siteAuthData['pass']);
-//        \DebugPrinter::debug($passForCheck);
-//        die();
+
         
         if (isset($siteAuthData['pass'])) {
             if ($passForCheck) {
