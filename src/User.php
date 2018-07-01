@@ -80,11 +80,10 @@ class User extends Session
         $st->execute();
         
         $siteAuthData = $st->fetch();
-//        \DebugPrinter::debug($siteAuthData);
-//        die();
         if (isset($siteAuthData['role'])) {
             return $siteAuthData['role'];
         }
+        
     }
     
     /**

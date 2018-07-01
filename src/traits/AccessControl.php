@@ -1,19 +1,22 @@
 <?php
 namespace ItForFree\SimpleMVC\traits;
 
+
+use ItForFree\SimpleMVC\exceptions\SmvcAccessException;
+
 /* 
  * Система контроля доступа
  */
-trait AccessControl {
+trait SmvcAccessException {
      
-   /**
-    * Массив, содержащий имена методов, доступных пользователю с данной ролью
-    * (должен переопределяться в контроллерах)
-    * @var array 
-    */ 
-   protected $rules = [];
+    /**
+     * Массив, содержащий имена методов, доступных пользователю с данной ролью
+     * (должен переопределяться в контроллерах)
+     * @var array 
+     */ 
+    protected $rules = [];
 
-   /**
+    /**
      * Запускает метод класса ***Controller полученный через GET-параметр
      * @param type 
      */
@@ -27,7 +30,7 @@ trait AccessControl {
 //            \DebugPrinter::debug($methodName, 'methodName (callAction)');
             $this->$methodName();
         } else {
-            throw  new \Exception("Доступ запрещен");
+            throw  new SmvcAccessException("Доступ запрещен");
         }
     }
     
