@@ -7,7 +7,7 @@ use ItForFree\SimpleMVC\exceptions\SmvcAccessException;
 /* 
  * Система контроля доступа
  */
-trait SmvcAccessException {
+trait AccessControl {
      
     /**
      * Массив, содержащий имена методов, доступных пользователю с данной ролью
