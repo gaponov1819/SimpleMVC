@@ -128,8 +128,10 @@ class User extends Session
     }
     
     /**
+     * Проверяет разрешено ли данному пользовалю использвать данный маршрут
      * 
-     * @param type $route
+     * @param string $route маршрут
+     * @return boolean  доступен ли он данном пользователю
      */
     public function isAllowed($route)
     {
@@ -157,8 +159,7 @@ class User extends Session
     {
         if($this->isAllowed($route)) {
             echo $elementHTML;
-        }
-        else echo "";
+        };
     }
     
 }
