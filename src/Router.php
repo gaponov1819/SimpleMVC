@@ -1,6 +1,8 @@
 <?php
 namespace ItForFree\SimpleMVC;
 
+use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
+
 /**
  * Класс-маршрутизатор, его задача по переданной строке (предположительно это какой-то адресе на сайте),
  * определить какой контролеер и какое действие надо вызывать.
@@ -20,17 +22,28 @@ class Router
      * 
      * @param srting $route маршрут: Любая строка (подразумевается, что это url или фрагмент), по которой можно определить вызываемый контроллер (класс) и его действие (метод)
      * @return $this
+     * @throws SmvcUsageException
      */
     public function callControllerAction($route)
     {
         $controllerName = "\\application\\controllers\\" . self::getControllerClassName($route);
+        
+        if (!class_exists($controllerName)) {
+            throw new SmvcUsageException("Контроллер не найден.");
+        }
         $controller = new $controllerName();
+
         $controller->callAction($route);
         
         return $this;
     }
     
-    
+    /**
+     *  Сформаирует имя класса контроллера, на осонвании переданного маршрута
+     * 
+     * @param string $route маршрут, запрошенный пользотелем
+     * @return  string
+     */
     public static function getControllerClassName($route)
     {
         $result = self::$defaultControllerName;

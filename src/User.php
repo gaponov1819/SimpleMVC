@@ -87,9 +87,11 @@ class User extends Session
     }
     
     /**
-     * Проверяет, зарегистрирован ли данный пользователь
-     * @param type $login
-     * @param type $pass
+     * Проверяет, можно ли авторизировать пользователя с данным логином и паролем
+     * 
+     * @param string $login
+     * @param string $pass
+     * @return boolean
      */
     private function checkAuthData($login, $pass)
     {
@@ -138,7 +140,6 @@ class User extends Session
         $result = false;
         $controllerClassName = "\\application\\controllers\\" . Router::getControllerClassName($route);
         $controller = new $controllerClassName();
-        $rules = $controller->getControllerRules();
         $action = $controller->getControllerActionName($route);
         
 //        echo "<br>Контроллер: " .  $controllerClassName . "<br> Действие: " . $action;

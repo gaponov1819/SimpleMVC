@@ -52,8 +52,6 @@ class Application
     public function run() {
         
         if (!empty($this->config)) {
-            
-            
             $route = $this->getConfigObject('core.url.class')::getRoute();
             (new Router())->callControllerAction($route);
             
@@ -65,7 +63,12 @@ class Application
         return $this;
     }
     
-    
+    /**
+     * Устанавливает конфигурацию приложения из массива
+     * 
+     * @param  array $config многомерный массив конфигурации приложения
+     * @return $this
+     */
     public function setConfiguration($config)
     {
         $this->config = new Dot($config);
