@@ -1,7 +1,8 @@
 <?php
 namespace ItForFree\SimpleMVC;
 
-use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
+use ItForFree\SimpleMVC\exceptions\SmvcRoutingException;
+use ItForFree\SimpleMVC\exceptions\SmvcAccessException;
 
 /**
  * Класс-маршрутизатор, его задача по переданной строке (предположительно это какой-то адресе на сайте),
@@ -10,30 +11,67 @@ use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 
 class Router
 {
+    
+    public $baseControllersNamespace = '\\application\\controllers\\';
 
    /**
     * Имя контроллера, которое надо указывать, если иное не найдено
     * @var string 
     */
    protected static $defaultControllerName = 'Homepage';
+   
+   
+   
+   /**
+    * Вернёт объект юзера
+    * 
+    * @staticvar type $instance
+    * @return \static
+    */
+    public static function get()
+    {
+        static $instance = null; // статическая переменная
+        if (null === $instance) { // проверка существования
+            $instance = new static();
+        }
+        return $instance;
+    }
+    
+    /** 
+     * Скрываем конструктор для того чтобы класс нельзя было создать в обход get 
+     */
+    protected function __construct() {}
     
     /**
      * Вызовет действие контроллера, разобрав переданный маршрут
      * 
      * @param srting $route маршрут: Любая строка (подразумевается, что это url или фрагмент), по которой можно определить вызываемый контроллер (класс) и его действие (метод)
      * @return $this
-     * @throws SmvcUsageException
+     * @throws SmvcRoutingException
      */
     public function callControllerAction($route)
     {
-        $controllerName = "\\application\\controllers\\" . self::getControllerClassName($route);
+        $controllerName = $this->getControllerClassName($route);
         
         if (!class_exists($controllerName)) {
-            throw new SmvcUsageException("Контроллер не найден.");
+            throw new SmvcRoutingException("Контроллер [$controllerName] не найден.");
         }
+        
         $controller = new $controllerName();
+        $actionName = $this->getControllerActionName($route);
+ 
+        if ($controller->isEnabled($actionName)) {
+            $methodName =  $this->getControllerMethodName($actionName);
+            
+            if (!method_exists($controller, $methodName)) {
+                throw new SmvcRoutingException("Метод контроллера ([$controllerName])"
+                        . " [$methodName] для данного действия [$actionName] не найден.");
+            }
 
-        $controller->callAction($route);
+            $controller->$methodName(); // вызываем действие контроллера
+        } else {
+            throw  new SmvcAccessException("Доступ к маршруту $route запрещен.");
+        }
         
         return $this;
     }
@@ -44,7 +82,7 @@ class Router
      * @param string $route маршрут, запрошенный пользотелем
      * @return  string
      */
-    public static function getControllerClassName($route)
+    public function getControllerClassName($route)
     {
         $result = self::$defaultControllerName;
                 
@@ -67,7 +105,37 @@ class Router
             $result .= $firstletterToUp;
 //            \DebugPrinter::debug($result, 'результат после сложения неймспейса и имени контроллера');
         } 
-        return $result. "Controller";
+        return $this->baseControllersNamespace . $result. "Controller";
     }
+    
+    /**
+     * Формирует полное имя метода контроллера по  переданному маршруту
+     * 
+     * @param  string $route маршрут
+     * @return string
+     */
+    public function getControllerActionName($route)
+    {
+        $result =  'index';
+         
+        $urlFragments = explode('/', $route);
+        $n = count($urlFragments);
+        if (!empty($urlFragments[$n-1])) {
+            $result = $urlFragments[$n-1];
+        } 
+         
+         return $result;
+    }
+    
+   /**
+     * Формирует имя метода контроллера по GET-параметру
+     * @param type $action -- строка GET-параметр
+     */
+    public function getControllerMethodName($action)
+    {
+        return $action . 'Action';
+    }
+    
+    
     
 }

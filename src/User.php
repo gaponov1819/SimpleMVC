@@ -1,23 +1,32 @@
 <?php
 namespace ItForFree\SimpleMVC;
 
+use ItForFree\SimpleMVC\Config;
+use ItForFree\SimpleMVC\mvc\Model;
+
 /**
- * Класс для работы с данными пользователя
+ * Абстрактный класс для работы с данными пользователя
  * @author qwe
  */
-class User extends Session
+abstract class User extends Model
 {
     public $role = null;
     
     public $userName = null;
     
     /**
+     * для хранения объекта обеспечивающего доступ к сессии
+     * @var ItForFree\SimpleMVC\Session 
+     */
+    protected $Session = null;
+    
+   /**
     * Вернёт объект юзера
     * 
     * @staticvar type $instance
     * @return \static
     */
-    public static function get()
+    public final static function get()
     {
         static $instance = null; // статическая переменная
         if (null === $instance) { // проверка существования
@@ -31,17 +40,21 @@ class User extends Session
      */
     protected function __construct()
     {
-        if (!empty(Session::get()->session['user']['role'])
-                && !empty(Session::get()->session['user']['userName'])) {
-            $this->role = Session::get()->session['user']['role'];
-            $this->userName = Session::get()->session['user']['userName'];
+        parent::__construct();
+        
+        $this->Session = Config::getObject('core.seesion.class');
+        $Session = $this->Session;
+        if (!empty($Session->session['user']['role'])
+                && !empty($Session->session['user']['userName'])) {
+            $this->role = $Session->session['user']['role'];
+            $this->userName = $Session->session['user']['userName'];
         }
         else {
-            Session::get()->session['user']['role'] = 'guest';
-            Session::get()->session['user']['userName'] = 'guest';
+            $Session->session['user']['role'] = 'guest';
+            $Session->session['user']['userName'] = 'guest';
             $this->role = 'guest';
             $this->userName = 'guest';
-            Session::get()->session['user']['userSessionLikesCount'] = 0;
+            $Session->session['user']['userSessionLikesCount'] = 0;
         }
     }
         
@@ -58,12 +71,14 @@ class User extends Session
             $role = $this->getRoleByUserName($login); 
             $this->role =  $role; 
             $this->userName = $login;
-            Session::get()->session['user']['role'] = $role; 
-            Session::get()->session['user']['userName'] = $login; 
-            Session::get()->session['user']['userSessionLikesCount'] = 0; 
+            $this->Session->session['user']['role'] = $role; 
+            $this->Session->session['user']['userName'] = $login; 
+            $this->Session->session['user']['userSessionLikesCount'] = 0; 
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
     
     /**
@@ -93,28 +108,7 @@ class User extends Session
      * @param string $pass
      * @return boolean
      */
-    private function checkAuthData($login, $pass)
-    {
-        $result = false;
-        
-        $pdo = new mvc\Model();
-        $sql = "SELECT salt, pass FROM users WHERE login = :login";
-        $st = $pdo->pdo->prepare($sql);
-        $st->bindValue( ":login", $login, \PDO::PARAM_STR);
-        $st->execute();
-        $siteAuthData = $st->fetch();
-   
-        $pass .= $siteAuthData['salt'];
-        $passForCheck = password_verify($pass, $siteAuthData['pass']);
-
-        
-        if (isset($siteAuthData['pass'])) {
-            if ($passForCheck) {
-                $result = true;
-            }
-        }
-        return $result;
-    }
+    protected abstract function checkAuthData($login, $pass);
     
     /**
      * Удаляет из Userа и Сессии данные об актуальной роли и мени пользователя
@@ -124,30 +118,38 @@ class User extends Session
         
         $this->role = "";
         $this->userName = "";
-        Session::get()->session['user'] = null;
+        $this->Session->session['user'] = null;
 //        session_destroy();
         return true;
     }
     
     /**
-     * Проверяет разрешено ли данному пользовалю использвать данный маршрут
+     * 
+     * Проверяет разрешено ли данному пользовалю использвать данный маршрут.
+     * Если полученный из роутера для данного маршрута контроллер не найден,
+     *  то считаем, что маршрут разрешён и не находится в ведении системы контроля доступа.
      * 
      * @param string $route маршрут
      * @return boolean  доступен ли он данном пользователю
+     * @throws SmvcUsageException
      */
     public function isAllowed($route)
     {
-        $result = false;
-        $controllerClassName = "\\application\\controllers\\" . Router::getControllerClassName($route);
-        $controller = new $controllerClassName();
-        $action = $controller->getControllerActionName($route);
+        $result = true;
+        $Router = Config::getObject('core.router.class');
         
-//        echo "<br>Контроллер: " .  $controllerClassName . "<br> Действие: " . $action;
+        $controllerName = $Router->getControllerClassName($route);
         
-        if ($controller->isEnabled($route, $action)) {
+        if (!class_exists($controllerName)) {
+//            throw new SmvcUsageException("Контроллер не найден.");
             $result = true;
+        } else {
+        
+            $controller = new $controllerName();
+            $actionName = $Router->getControllerActionName($route);
+            $result = $controller->isEnabled($actionName);
         }
-//        echo "<br>Результат: " . $result;
+        
         return $result;
     }
  
@@ -161,6 +163,51 @@ class User extends Session
         if($this->isAllowed($route)) {
             echo $elementHTML;
         };
+    }
+    
+    
+    /**
+     * Вернёт массив с выкладкой (пояснением) по параметрам, влияющим на доступ пользоватлея к маршруту
+     * 
+     * @param  string $route
+     * @return array
+     */
+    public function explainAccess($route)
+    {
+        $Router = Config::getObject('core.router.class');
+        $role = $this->role;
+        $hypoControllerName = $Router->getControllerClassName($route);
+        $controllerExists = class_exists($hypoControllerName);
+        $actionName = $Router->getControllerActionName($route);
+        $methodName = 'имя метода не найдено';
+        $methodExists = false;
+        $rules = 'правил не найдено';
+        $access = 'не  определён';
+        $explanation = 'нет пояснения';
+        
+        if ($controllerExists) {
+            $controller = new $hypoControllerName();
+            $rules = $controller->getRules(); 
+            $methodName =  $Router->getControllerMethodName($actionName);
+            $methodExists = method_exists($controller, $methodName);
+            $access = $controller->isEnabled($actionName);
+            $explanation = $controller->explanation;
+        }
+        
+        $result = [
+            'Переданный маршрут' => $route,
+            'Роль пользователя' => $role,
+            'Гипотетическое имя контроллера:' =>  $hypoControllerName,
+            'Имя действия (как в правилах)'  => $actionName,
+            'Гипотетическое метода контролллера для данного действия'  => $methodName,
+            'Контроллер найден (существует)?' => $controllerExists,
+            'Действие контроллера найдено (существует)?' => $methodExists,
+            'Правила контроллера:' => $rules,
+            'Есть доступ?' => $access,
+            'Пояснение системы контроля:' => $explanation,
+        ];
+        
+        return $result;
     }
     
 }

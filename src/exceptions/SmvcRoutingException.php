@@ -2,10 +2,9 @@
 namespace ItForFree\SimpleMVC\exceptions;
 
 /**
- * Класс исключений, 
- * предупреждающих клиенский код о неправильном использовании SimpleMVC
+ * Исключения маршрутизации
  */
-class SmvcUsageException extends SmvcException
+class SmvcRoutingException extends SmvcUsageException
 {
     // Переопределим исключение так, что параметр message станет обязательным
     public function __construct($message, $code = 0, Exception $previous = null) {
@@ -17,7 +16,7 @@ class SmvcUsageException extends SmvcException
 
     // Переопределим строковое представление объекта.
     public function __toString() {
-        return __CLASS__ . ":[{$this->code}]: {$this->message}  Некорректное использование SimpleMVC \n";
+        return __CLASS__ . ":[{$this->code}]: {$this->message}  // Ошибка маршрутизации SimpleMVC \n";
     }
 
 }

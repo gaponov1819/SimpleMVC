@@ -4,6 +4,8 @@ namespace ItForFree\SimpleMVC;
 
 /**
  * Класс для работы с массивом $_SESSION
+ * 
+ * @todo Проверить на проблему блокировки сессии: @see http://php.net/manual/ru/session.examples.basic.php
  *
  * @author qwe
  */

@@ -42,7 +42,7 @@ class Application
         }
         return $instance;
     }
-    
+ 
 
     /**
      * Запускает приложение
@@ -53,7 +53,13 @@ class Application
         
         if (!empty($this->config)) {
             $route = $this->getConfigObject('core.url.class')::getRoute();
-            (new Router())->callControllerAction($route);
+            
+            /**
+             * @var ItForFree\SimpleMVC\Router
+             */
+            $Router = $this->getConfigObject('core.router.class');
+            
+            $Router->callControllerAction($route);
             
         } else {
             throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
