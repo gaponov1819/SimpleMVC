@@ -20,6 +20,12 @@ class Model
      * @var string Имя обрабатываемой таблицы 
      */
     public $tableName = '';
+    
+    
+    /**
+    * @var int ID сущности в базе данных
+    */
+    public $id = null;
 
     /**
      * Устанавливает соединение с БД
@@ -69,7 +75,7 @@ class Model
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
         
-    public function getList( $numRows=1000000)  
+    public function getList($numRows=1000000)  
     {
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $this->tableName
                 ORDER BY  $this->orderBy LIMIT :numRows";
@@ -93,6 +99,13 @@ class Model
         return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
     }
     
+    /**
+     * Метод для пейджинации объектов
+     * 
+     * @param int $pageNumber
+     * @param int $limit
+     * @return type
+     */
     public function getPage($pageNumber = 1, $limit = 2)
     {
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $this->tableName
@@ -100,15 +113,12 @@ class Model
 
         $modelClassName = static::class;
         $offset = ($pageNumber - 1)*$limit;
-        
-        
-        //echo($limit); echo($offset);// die();
+
         $st = $this->pdo->prepare($sql);
         $st->bindValue( ":limit", intval($limit), \PDO::PARAM_INT );
         $st->bindValue( ":offset", intval($offset), \PDO::PARAM_INT );
-       // echo('<pre>'); $st->debugDumpParams(); echo('</pre>');
+
         $st->execute();
-//        echo('<pre>'); $st->debugDumpParams(); echo('</pre>');
         
         while ( $row = $st->fetch() ) {
             $example = new $modelClassName( $row );
@@ -131,15 +141,10 @@ class Model
     */
     public function delete() 
     {
-        // Удаляем статью
-//        try{
-            $st = $this->pdo->prepare ( "DELETE FROM $this->tableName WHERE id = :id LIMIT 1" );
-            $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
-            $st->execute();
-//        }
-//        catch(\PDOException $ex){
-//            die($ex->getMessage); 
-//        }
+        $st = $this->pdo->prepare("DELETE FROM $this->tableName WHERE id = :id LIMIT 1" );
+        $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
+        $st->execute();
+
     }
     
     public function likesUpper($id,$tableName)
@@ -155,22 +160,7 @@ class Model
         return $modelData->likes;
     }
     
-    public function getUserId()
-    {
-        if (\ItForFree\SimpleMVC\User::get()->userName !== 'guest'){
-            $sql = "SELECT id FROM users where login = :userName";
-            $st = $this->pdo->prepare($sql); 
-            $st -> bindValue( ":userName", \ItForFree\SimpleMVC\User::get()->userName, \PDO::PARAM_STR );
-            $st -> execute();
-            $row = $st->fetch();
-//            \DebugPrinter::debug($row);
-//            die();
-            return $row['id']; 
-        }
-//        else return false;
-        //else throw new \Exception("Пользователь не зарегистрирован!");
-        
-    }
+
     
 }
 

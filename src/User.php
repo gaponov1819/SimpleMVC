@@ -42,7 +42,7 @@ abstract class User extends Model
     {
         parent::__construct();
         
-        $this->Session = Config::getObject('core.seesion.class');
+        $this->Session = Config::getObject('core.session.class');
         $Session = $this->Session;
         if (!empty($Session->session['user']['role'])
                 && !empty($Session->session['user']['userName'])) {

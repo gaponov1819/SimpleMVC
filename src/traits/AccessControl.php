@@ -1,11 +1,10 @@
 <?php
+
 namespace ItForFree\SimpleMVC\traits;
 
-
-use \ItForFree\SimpleMVC\User;
 use ItForFree\SimpleMVC\exceptions\SmvcAccessException;
 use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
-
+use ItForFree\SimpleMVC\Config;
 
 /* 
  * Система контроля доступа
@@ -66,50 +65,8 @@ trait AccessControl {
      */
     public function IsEnabled($actionName)
     {
-        $currentRole = User::get()->role;
+        $currentRole = Config::getObject('core.user.class')->role;
         if (!empty($this->rules)) {
-//            $rules = $this->rules;
-//            $this->explanation = '';
-//            // Сначала проверим, есть ли правило конкретно для данного действия
-//            if (!empty($rules[$actionName])) {
-//                if (!empty($rules[$actionName]['deny'])) {
-//                    foreach ($rules[$actionName]['deny'] as $k => $role) {  // перебираем имена ролей пользователей
-//                        if ($currentRole == $role) {
-//                            $this->explanation = "Для действия $actionName и роли $role найдено персональное запрещающее правило.";
-//                            return false;
-//                        }
-//                    }
-//                }   
-//                if (!empty($rules[$actionName]['allow'])) {
-//                    foreach ($rules[$actionName]['allow'] as $k => $role) { // перебираем имена ролей пользователей
-//                        if ($currentRole == $role) {
-//                            $this->explanation = "Для действия $actionName и роли $role найдено персональное разрешающее правило.";
-//                            return true;
-//                        }
-//                    }
-//                }
-//            }
-//            
-//            $this->explanation = "Конкретных правил для действия $actionName  не найдено. Глобальные правила: ";
-//            // Если правил для конкретного действия не оказалось - -смотрим глобальные правила контролеера для всех ролей
-//            if (!empty($rules['all'])) {
-//                if (!empty($rules['all']['deny'])) {
-//                    foreach ($rules['all']['deny'] as $k => $action) { // перебираем имена действий
-//                        if ($actionName == $action) {
-//                            $this->explanation .= " имя действия найдено в запрещающей секции"; 
-//                            return false;
-//                        }
-//                    }
-//                }   
-//                if (!empty($rules['all']['allow'])) {
-//                    foreach ($rules['all']['allow'] as $k => $action) {  // перебираем имена действий 
-//                        if ($actionName == $action) {
-//                            $this->explanation .= " имя действия найдено в разрешающей секции."; 
-//                            return true;
-//                        }
-//                    }
-//                }
-//            }
             
             return $this->IsEnabledInYii2Style($actionName, $currentRole, $this->rules);
             
