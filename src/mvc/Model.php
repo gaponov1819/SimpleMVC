@@ -23,6 +23,11 @@ class Model
     
     
     /**
+     *  @var string Имя поля по котору сортируем
+     */
+    public $orderBy = '';
+    
+    /**
     * @var int ID сущности в базе данных
     */
     public $id = null;
@@ -47,16 +52,17 @@ class Model
     /**
      * Получает из БД все поля одной строки таблицы, с соответствующим Id
      * Возвращает объект класса модели
+     * @param int $id  id строки
+     * @param string   $tableName  имя таблицы (необязатлеьный параметр)
      * 
-     * @param int $id
-     * @return obgect
+     * @return \ItForFree\SimpleMVC\mvc\Model
      */
     public function getById($id, $tableName = '')
     {
-        $tableName = isset($tableName) ? $tableName : $this->tableName;
         
-        $sql = "SELECT * FROM $tableName where id = :id";
-//      
+        $tableName = !empty($tableName) ? $tableName : $this->tableName;
+        
+        $sql = "SELECT * FROM $tableName where id = :id";      
         $modelClassName = static::class;
         
         $st = $this->pdo->prepare($sql); 
@@ -85,32 +91,30 @@ class Model
     {
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $this->tableName
                 ORDER BY  $this->orderBy LIMIT :numRows";
-
-        $modelClassName = static::class;
         
+        $modelClassName = static::class;
+       
         $st = $this->pdo->prepare($sql);
         $st->bindValue( ":numRows", $numRows, \PDO::PARAM_INT );
         $st->execute();
         $list = array();
         
-        
-        while ( $row = $st->fetch() ) {
-            $example = new $modelClassName( $row );
+        while ($row = $st->fetch()) {
+            $example = new $modelClassName($row);
             $list[] = $example;
         }
 
-//         Получаем общее количество статей, которые соответствуют критерию
-        $sql = "SELECT FOUND_ROWS() AS totalRows";
-        $totalRows = $this->pdo->query( $sql )->fetch();
-        return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
+        $sql = "SELECT FOUND_ROWS() AS totalRows"; //  получаем число выбранных строк
+        $totalRows = $this->pdo->query($sql)->fetch();
+        return (array ("results" => $list, "totalRows" => $totalRows[0]));
     }
     
     /**
-     * Метод для пейджинации объектов
+     * Метод для пейджинации данных из БД
      * 
-     * @param int $pageNumber
-     * @param int $limit
-     * @return type
+     * @param int $pageNumber  номер страницы
+     * @param int $limit       число элементов на странице
+     * @return array           массив  кортежей из БД
      */
     public function getPage($pageNumber = 1, $limit = 2)
     {
@@ -133,7 +137,7 @@ class Model
        // Получаем общее количество статей, которые соответствуют критерию
         $sql = "SELECT FOUND_ROWS() AS totalRows";
         $totalRows = $this->pdo->query( $sql )->fetch();
-        return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
+        return array("results" => $list, "totalRows" => $totalRows[0]);
     }
   
     public function loadFromArray($arr)
