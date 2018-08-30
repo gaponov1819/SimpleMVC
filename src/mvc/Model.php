@@ -51,19 +51,25 @@ class Model
      * @param int $id
      * @return obgect
      */
-    public function getById($id, $tableName)
+    public function getById($id, $tableName = '')
     {
         $tableName = isset($tableName) ? $tableName : $this->tableName;
+        
         $sql = "SELECT * FROM $tableName where id = :id";
 //      
         $modelClassName = static::class;
         
         $st = $this->pdo->prepare($sql); 
         
-        $st -> bindValue( ":id", $id, \PDO::PARAM_INT );
-        $st -> execute();
+        $st->bindValue(":id", $id, \PDO::PARAM_INT);
+        $st->execute();
         $row = $st->fetch();
-        if ( $row ) { return new $modelClassName( $row );}
+        
+        if ($row) { 
+            return new $modelClassName( $row );
+        } else {
+            return null;
+        }
     }
    
     /**
@@ -145,6 +151,22 @@ class Model
         $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
         $st->execute();
 
-    }  
+    }
+    
+    public function likesUpper($id,$tableName)
+    {
+        $modelData = $this->getById($id, $tableName);
+        $modelData->likes++;
+        $modelData->update();
+    }
+    
+    public function getModelLikes($id, $tableName) //метод не узнаёт какая именно модель
+    {
+        $modelData = $this->getById($id, $tableName);
+        return $modelData->likes;
+    }
+    
+
+    
 }
 
