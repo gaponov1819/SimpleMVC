@@ -111,7 +111,7 @@ abstract class User extends Model
     protected abstract function checkAuthData($login, $pass);
     
     /**
-     * Удаляет из Userа и Сессии данные об актуальной роли и мени пользователя
+     * Удаляет из User-а и Сессии данные об актуальной роли и имени пользователя
      */
     public function logout()
     {
@@ -119,7 +119,7 @@ abstract class User extends Model
         $this->role = "";
         $this->userName = "";
         $this->Session->session['user'] = null;
-//        session_destroy();
+
         return true;
     }
     
