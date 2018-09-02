@@ -20,25 +20,30 @@ class View
      */
     private $vars = [];
     
-    /**
-     * @var string Путь к общему "подвалу" сайта
-     */
-    public $footerFilePath = 'footer.php'; 
-    
-    /**
-     * @var string Путь к общей "шапке" сайта
-     */
-    public $headerFilePath = 'header.php';
    
     /**
-     * Задаёт путь к корневому каталогу
+     * @var string Путь к файлу шаблона внутрь которого и подставляется конкретное представление?
+     *  (относительно $this->layoutsBasePath).
+     * 
      */
-    public function __construct() {
+    public $layoutPath = '/';
+    
+    
+    /**
+     * @var string  gолный путь к базовой директории шаблонов
+     */
+    public $layoutsBasePath = '/';
+    
+    /**
+     * Создаёт класс представления
+     * 
+     * @param string $layoutPath путь к шаблону относительно $this->layoutsBasePath
+     */
+    public function __construct($layoutPath = 'default.php') {
         $this->templateBasepath = 
             rpath(Config::get('core.mvc.views.base-template-path'));
-        $this->footerFilePath = 'footer.php';
-        $this->headerFilePath = 'header.php';
-        
+        $this->layoutsBasePath =  rpath(Config::get('core.mvc.views.base-layouts-path'));
+        $this->layoutPath = $this->layoutsBasePath . $layoutPath;
     }
 
     /**
@@ -54,23 +59,30 @@ class View
 
     /**
      * Формирует окончательное представление страницы. 
-     * Собирает базовый HTML
-     * и индивидуальный для каждой страницы
+     * Запишет содержимое файла представления (вместе с подставленными переменными) 
+     * в переменную $CONTENT_DATA (имя специально не в нотации) и подставит её в шаблон.
      * 
-     * @param string Путь к целевой странице
+     * @param string $path         Путь представлению относитлеьно базовой папки представлений
+     * @param string $layoutPath  Относитлеьный путь к файлу шаблона -- передавайте только если требуется переопределить шаблон, который передаётся в конструктор представления
      */
-    public function render($path, $text = '')
+    public function render($path, $layoutPath = '')
     {
-        extract($this->vars);
-               
-        include($this->templateBasepath . $this->headerFilePath);
         
-        echo $text;
+        if($layoutPath) {
+           $layoutPath = $this->layoutsBasePath . $layoutPath; 
+        } else {
+            $layoutPath = $this->layoutPath;
+        }
         
-        include($this->templateBasepath . $path);
+        // Далее начинаем формировать представление
+        extract($this->vars); // распаковываем переменные, переданные в представление (VIEW)
+        ob_start(); // перехватываем поток вывода
+        include($this->templateBasepath . $path); 
+        $CONTENT_DATA = ob_get_contents(); // записываем перехваченное в переменную
+        ob_end_clean(); // отключаем перехват
         
-        include($this->templateBasepath . $this->footerFilePath);
-        
+        include($layoutPath); // подключаем шаблон, куда и будет подставлено 
+  
     }
     
     /**
@@ -86,8 +98,5 @@ class View
                 
         include($this->templateBasePath . $path);
         
-    }
-    
-    
+    }   
 }
-

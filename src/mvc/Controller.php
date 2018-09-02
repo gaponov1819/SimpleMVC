@@ -9,22 +9,25 @@ class Controller
     use \ItForFree\SimpleMVC\traits\AccessControl;
     
     /**
-     * @var object Хранит экземпляр класса View
+     * @var \ItForFree\SimpleMVC\mvc\View Хранит экземпляр класса View
      */
     public $view = null;
+    
+    /**
+     * @var string Имя (путь относительно базовой папки шаблонов, определяемой в классе конфиге приложения) шаблона (для представлений)
+     */
+    public $layoutPath = 'main.php';
     
     /**
      * Создаёт экземпляр класса View для работы с представлениями
      */
     public function __construct() {
-        $this->view = new View();
-        // $this->view = new \ItForFree\PhpExamples\MVC\SimpleView();
-       // \DebugPrinter::debug($this->view);
+        $this->view = new View($this->layoutPath);
+
     }
     
     public function header($path) { // 302 редирет
         header ("Location: $path");
     }
-
 }
 
