@@ -2,7 +2,7 @@
     "name": "it-for-free/simple-mvc",
     "type": "cms",
     "description": "Пример движка MVC",
-    "keywords": ["php", "itforfree", "mvc", "framework", "учебный"],
+    "keywords": ["php", "itforfree", "mvc", "framework", "simple"],
     "homepage": "http://fkn.ktu10.com/?q=forum/133",
      
     "autoload": {
@@ -12,14 +12,9 @@
     },
     
     "require": {
-        "it-for-free/php-examples": "dev-master",
         "it-for-free/rusphp": "dev-master"
     },
     "repositories": [
-        {
-           "type": "vcs",
-           "url": "https://github.com/it-for-free/PhpExamples"
-        },
         {
            "type": "vcs",
            "url": "https://github.com/it-for-free/rusphp"
