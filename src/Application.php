@@ -4,7 +4,6 @@ namespace ItForFree\SimpleMVC;
 use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
 use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 use ItForFree\SimpleMVC\exceptions\SmvcConfigException;
-use ItForFree\SimpleMVC\Router;
 use ItForFree\rusphp\PHP\Object\ObjectFactory;
 
 /**
@@ -62,7 +61,7 @@ class Application
             $Router->callControllerAction($route);
             
         } else {
-            throw new SmvcCoreException ('Не задан конфигурационный массив приложения!');
+            throw new SmvcCoreException('Не задан конфигурационный массив приложения!');
         }
 
         

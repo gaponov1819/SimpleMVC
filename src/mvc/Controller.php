@@ -26,8 +26,15 @@ class Controller
 
     }
     
-    public function header($path) { // 302 редирет
-        header ("Location: $path");
+    /**
+     * Редирект на указанный адрес 
+     * (устанавливает заголовок location)
+     * 
+     * @todo Проверить не нужен ли exit после установления заголовка.
+     * 
+     * @param string $path
+     */
+    public function redirect($path) { // 302 редирет
+        header("Location: $path");
     }
 }
-
