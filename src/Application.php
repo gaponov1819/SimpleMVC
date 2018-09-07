@@ -52,7 +52,6 @@ class Application
         
         if (!empty($this->config)) {
             $route = $this->getConfigObject('core.url.class')::getRoute();
-            
             /**
              * @var ItForFree\SimpleMVC\Router
              */
@@ -114,11 +113,12 @@ class Application
         $configValue = self::getConfigElement($inConfigArrayPath);
         
         if (!class_exists($configValue)) {
-            throw new SmvcConfigException("Вы  запросили получение экземпляра класса $configValue "
-                    . " (был добавлен в конфиг по адресу $configValue),"
-                    . " но такой класс не был ранее объеляен, "
-                    . "убедитесь чтобы его код подключен "
-                    . "до  обращения к экземпляру объекта ");
+            throw new SmvcConfigException("Вы  запросили получение экземпляра класса "
+                . "$configValue "
+                . " (был добавлен в конфиг по адресу $configValue),"
+                . " но такой класс не был ранее объеляен, "
+                . "убедитесь чтобы его код подключен "
+                . "до  обращения к экземпляру объекта ");
         }
         
         return ObjectFactory::getInstanceOrSingletone($configValue);
