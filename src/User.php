@@ -54,7 +54,6 @@ abstract class User extends Model
             $Session->session['user']['userName'] = 'guest';
             $this->role = 'guest';
             $this->userName = 'guest';
-            $Session->session['user']['userSessionLikesCount'] = 0;
         }
     }
         
@@ -73,33 +72,19 @@ abstract class User extends Model
             $this->userName = $login;
             $this->Session->session['user']['role'] = $role; 
             $this->Session->session['user']['userName'] = $login; 
-            $this->Session->session['user']['userSessionLikesCount'] = 0; 
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
     
     /**
      * Получить роль по имени пользователя
-     * @param type $userName
-     * @return type
+     * 
+     * @param string $userName
+     * @return string
      */
-    private function getRoleByUserName($userName)
-    {
-        $pdo = new mvc\Model();
-        $sql = "SELECT role FROM users WHERE login = :login";
-        $st = $pdo->pdo->prepare($sql);
-        $st->bindValue( ":login", $userName, \PDO::PARAM_STR);
-        $st->execute();
-        
-        $siteAuthData = $st->fetch();
-        if (isset($siteAuthData['role'])) {
-            return $siteAuthData['role'];
-        }
-        
-    }
+    protected abstract function getRoleByUserName($userName);
     
     /**
      * Проверяет, можно ли авторизировать пользователя с данным логином и паролем
