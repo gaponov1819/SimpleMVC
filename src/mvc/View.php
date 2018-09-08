@@ -18,8 +18,7 @@ class View
      * @var array Массив, содержащий все переменные программы для их 
      * транспортировки из области видимости контроллеров в представления
      */
-    private $vars = [];
-    
+    protected $vars = [];
    
     /**
      * @var string Путь к файлу шаблона внутрь которого и подставляется конкретное представление?
@@ -27,7 +26,6 @@ class View
      * 
      */
     public $layoutPath = '/';
-    
     
     /**
      * @var string  gолный путь к базовой директории шаблонов
@@ -42,17 +40,18 @@ class View
     public function __construct($layoutPath = 'default.php') {
         $this->templateBasepath = 
             rpath(Config::get('core.mvc.views.base-template-path'));
-        $this->layoutsBasePath =  rpath(Config::get('core.mvc.views.base-layouts-path'));
+        $this->layoutsBasePath = rpath(Config::get('core.mvc.views.base-layouts-path'));
         $this->layoutPath = $this->layoutsBasePath . $layoutPath;
     }
 
     /**
-     * Добавить переменную в шаблон
+     * Делает значение переменной 
+     * доступной в представлении (view) по данному имени
      * 
-     * @param type $name
-     * @param type $value
+     * @param string $name  имя будущей переменной в представлени
+     * @param mixed $value  значение
      */
-    public function addVar($name, $value)
+    public function addVar(string $name, $value)
     {
         $this->vars[$name] = $value;
     }
@@ -62,12 +61,11 @@ class View
      * Запишет содержимое файла представления (вместе с подставленными переменными) 
      * в переменную $CONTENT_DATA (имя специально не в нотации) и подставит её в шаблон.
      * 
-     * @param string $path         Путь представлению относитлеьно базовой папки представлений
+     * @param string $viewFilePath         Путь к файду представления относительно базовой папки представлений
      * @param string $layoutPath  Относитлеьный путь к файлу шаблона -- передавайте только если требуется переопределить шаблон, который передаётся в конструктор представления
      */
-    public function render($path, $layoutPath = '')
+    public function render($viewFilePath, $layoutPath = '')
     {
-        
         if($layoutPath) {
            $layoutPath = $this->layoutsBasePath . $layoutPath; 
         } else {
@@ -76,13 +74,13 @@ class View
         
         // Далее начинаем формировать представление
         extract($this->vars); // распаковываем переменные, переданные в представление (VIEW)
+        
         ob_start(); // перехватываем поток вывода
-        include($this->templateBasepath . $path); 
+        include($this->templateBasepath . $viewFilePath); 
         $CONTENT_DATA = ob_get_contents(); // записываем перехваченное в переменную
         ob_end_clean(); // отключаем перехват
         
         include($layoutPath); // подключаем шаблон, куда и будет подставлено 
-  
     }
     
     /**
@@ -94,9 +92,7 @@ class View
      */
     public function renderPartition($path)
     {
-        extract($this->vars);
-                
+        extract($this->vars);  
         include($this->templateBasePath . $path);
-        
     }   
 }

@@ -33,14 +33,35 @@ class Model
     public $id = null;
 
     /**
-     * Устанавливает соединение с БД
      * 
-     * @return объект класса PDO для раборы с БД
+     * @param array $data необязательный массив для инициаллизации свойств объекта модели
      */
-    public function __construct() 
+    public function __construct($data = null) 
+    {
+        $this->setPdoSettings();
+        if (is_array($data)) {
+            $this->setObjectVars($this, $data);
+        }
+    }
+    
+   /**
+    * Присваивает свойствам объекта, соответствующие по имена ключей значений из массива
+    */
+    private function setObjectVars($object, array $vars) 
+    {
+        $has = get_object_vars($object);
+        foreach ($has as $name => $oldValue) {
+            $object->$name = isset($vars[$name]) ? $vars[$name] : $object->$name; 
+        }
+    } 
+    
+    /**
+     * Устанавливает настройки доступа к БД и сохраяет объект PDO в одноименное свойство модели
+     *  ($this->pdo)
+     */
+    protected function setPdoSettings()
     {
         $dbSettings = Application::getConfigElement('core.db');
-        
         $this->pdo = new \PDO($dbSettings['dns'], 
                 $dbSettings['username'],
                 $dbSettings['password'],
@@ -140,6 +161,13 @@ class Model
         return array("results" => $list, "totalRows" => $totalRows[0]);
     }
   
+    /**
+     * 
+     * @todo проверить нужность.
+     * 
+     * @param type $arr
+     * @return \ItForFree\SimpleMVC\mvc\modelClassName
+     */
     public function loadFromArray($arr)
     {
         $modelClassName = static::class;
@@ -155,22 +183,5 @@ class Model
         $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
         $st->execute();
 
-    }
-    
-    public function likesUpper($id,$tableName)
-    {
-        $modelData = $this->getById($id, $tableName);
-        $modelData->likes++;
-        $modelData->update();
-    }
-    
-    public function getModelLikes($id, $tableName) //метод не узнаёт какая именно модель
-    {
-        $modelData = $this->getById($id, $tableName);
-        return $modelData->likes;
-    }
-    
-
-    
+    }   
 }
-

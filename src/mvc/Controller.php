@@ -9,7 +9,7 @@ class Controller
     use \ItForFree\SimpleMVC\traits\AccessControl;
     
     /**
-     * @var \ItForFree\SimpleMVC\mvc\View Хранит экземпляр класса View
+     * @var \ItForFree\SimpleMVC\mvc\View Хранит экземпляр класса View (Представления)
      */
     public $view = null;
     
