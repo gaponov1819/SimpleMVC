@@ -12,6 +12,7 @@
     },
     
     "require": {
+        "php": ">=7.2",
         "it-for-free/rusphp": "dev-master"
     },
     "repositories": [
