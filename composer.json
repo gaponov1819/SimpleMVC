@@ -13,7 +13,7 @@
     
     "require": {
         "php": ">=7.2",
-        "ext-pdoo_mysql": "*",
+        "ext-pdo_mysql": "*",
         "it-for-free/rusphp": "dev-master"
     },
     "repositories": [
