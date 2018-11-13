@@ -16,7 +16,7 @@ class SimpleAsset
     * Путь относительно корня сайта к базовой директории
     * @var string 
     */
-   public $basePath = '';
+   public $basePath = 'test-source-path/';
    
    public $js = [];
    
@@ -29,27 +29,32 @@ class SimpleAsset
     */
    public static function add()
    {
-       $Asset = new static();
+       $name = get_called_class();
+       $Asset = new $name;
        $Asset->basePath = Path::addToDocumentRoot($Asset->basePath); // делаем относительный путь абсолютным
+       if (!is_dir($Asset->basePath)) {
+            throw new \Exception("Source asset dir {$Asset->basePath} not exists for " . get_class($Asset) ."! ");
+       }
        SimpleAssetManager::addAsset($Asset);
    }
 
   
-   protected function publish()
+   public function publish()
    {
-       $baseAssetPublishPath = $this->basePath . LengthHash::md5($this::class, 10);
+       $baseAssetPublishPath = SimpleAssetManager::getPublishBasePath() . LengthHash::md5(static::class, 10);
+//       pdie($baseAssetPublishPath);
        
-       if (!is_dir($baseAssetPublishPath)) { // создаём базовую директорию, если её нет
-            if(!mkdir($baseAssetPublishPath, 0777, true)) {
-                throw new \Exception("Не удалось создать директорию $baseAssetPublishPath");
-            }
-       }
+
+       Directory::createRecIfNotExists($baseAssetPublishPath, 0777);
        
        $lastChangeFileTimestamp = $this->getLastChangeFileTimestamp();
+       
+//       pdie($lastChangeFileTimestamp); 
        $baseAssetTimePath = $baseAssetPublishPath 
             . DIRECTORY_SEPARATOR . $lastChangeFileTimestamp;
        
-       if (!is_dir($baseAssetTimePath)) {
+          
+       if (is_dir($baseAssetTimePath)) {
            return; // если ничего не изменилось
        } else {
            Directory::clear($baseAssetPublishPath); // полностью очищаем родительскую директорию
@@ -60,16 +65,22 @@ class SimpleAsset
    protected function copyToAssetsDir($basePublishPath)
    {
         $assetSourcePath = $this->basePath;
-        foreach ($this->js as $filePath) {
-            $fullPubPath = $basePublishPath . 'js/' 
-                    . DIRECTORY_SEPARATOR . $filePath;
+        foreach ($this->js as $filePath) {         
+            $pubFolderPath = $basePublishPath . 'js/' ;
+            Directory::createRecIfNotExists($pubFolderPath, 0777);
+            
+            $fullPubPath = $pubFolderPath . Path::getFileName($filePath);
             $fullSourcePath = $assetSourcePath . DIRECTORY_SEPARATOR . $filePath;
+//            ppre($fullSourcePath);
+//            pdie($fullPubPath);
             copy($fullSourcePath, $fullPubPath); 
         }
         
         foreach ($this->css as $filePath) {
-            $fullPubPath = $basePublishPath . 'css/' 
-                    . DIRECTORY_SEPARATOR . $filePath;
+            $pubFolderPath = $basePublishPath . 'css/' ;
+            Directory::createRecIfNotExists($pubFolderPath, 0777);
+            
+            $fullPubPath = $pubFolderPath . Path::getFileName($filePath);
             $fullSourcePath = $assetSourcePath . DIRECTORY_SEPARATOR . $filePath;
             copy($fullSourcePath, $fullPubPath); 
         }
@@ -78,17 +89,29 @@ class SimpleAsset
    protected function getLastChangeFileTimestamp()
    {
         $assetSourcePath = $this->basePath;
-        $lasttime = null;
+        
+        $lasttime = 0;
 
         foreach ($this->js as $filePath) {
-            $fullPath = $assetPubPath . DIRECTORY_SEPARATOR . $filePath;
-            $lasttime = filemtime($fullPath);
+            $fullPath = $assetSourcePath . DIRECTORY_SEPARATOR . $filePath;
+//            ppre($fullPath);
+            $currentLastTime = filemtime($fullPath);
+            
+            if ($lasttime < $currentLastTime) {
+                $lasttime = $currentLastTime;
+            }
         }
         
         foreach ($this->css as $filePath) {
-            $fullPath = $assetPubPath . $filePath;
-            $lasttime = filemtime($fullPath);
+            $fullPath = $assetSourcePath . DIRECTORY_SEPARATOR . $filePath;
+            $currentLastTime = filemtime($fullPath);
+            
+            if ($lasttime < $currentLastTime) {
+                $lasttime = $currentLastTime;
+            }
         }
+        
+//        pdie($lasttime);
         
         return $lasttime; 
    } 

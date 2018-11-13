@@ -2,6 +2,8 @@
 
 namespace ItForFree\SimpleMVC\components\SimpleAsset;
 
+use ItForFree\rusphp\File\Path;
+
 /**
  * Используется, в частности для непостредственого отображения CSS и JS
  */
@@ -45,12 +47,17 @@ class SimpleAssetManager
      */
     public static function addAsset($SimpleAssetObject)
     {
+        
+        if (!is_dir(static::getPublishBasePath())) {
+            throw new \Exception("Base asset dir {$Asset->basePath} not exists! ");
+        }
+        
         static::$assets[] = $SimpleAssetObject;
         
         foreach ($SimpleAssetObject->js as $jsFile) {
             static::$jsList[] = [
                 'source' => $jsFile,
-                'assetClassName' => $SimpleAssetObject::class,
+                'assetClassName' => get_class($SimpleAssetObject),
 
             ];
         }
@@ -60,5 +67,10 @@ class SimpleAssetManager
     protected static function publishJs()
     {
         
+    }
+    
+    public static function getPublishBasePath()
+    {
+        return Path::addToDocumentRoot(static::$assetsPath);
     }
 }
