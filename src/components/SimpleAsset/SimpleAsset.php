@@ -5,7 +5,7 @@ namespace ItForFree\SimpleMVC\components\SimpleAsset;
 use ItForFree\SimpleMVC\components\SimpleAsset\SimpleAssetManager;
 use ItForFree\rusphp\File\Path;
 use ItForFree\rusphp\PHP\Hash\LengthHash;
-use ItForFree\rusphp\Common\Directory\Directory;
+use ItForFree\rusphp\File\Directory\Directory;
 
 /**
  * Базовый класс
