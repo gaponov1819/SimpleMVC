@@ -96,7 +96,7 @@ class SimpleAssetManager
         $html = '';
         foreach (static::$assets as $Asset) {
             foreach ($Asset->publishedPaths['js'] as $filePath) {
-                $html .= "script type=\"text/javascript\" src=\""
+                $html .= "<script type=\"text/javascript\" src=\""
                         . Path::getWithoutDocumentRoot($filePath, true) ."\"></script>\n";
             }
         }
@@ -112,7 +112,7 @@ class SimpleAssetManager
         $html = '';
         foreach (static::$assets as $Asset) {
             foreach ($Asset->publishedPaths['css'] as $filePath) {
-                $html .= 'link rel="stylesheet" type="text/css" href="'
+                $html .= '<link rel="stylesheet" type="text/css" href="'
                         . Path::getWithoutDocumentRoot($filePath, true) ."\">\n";
             }
         }
