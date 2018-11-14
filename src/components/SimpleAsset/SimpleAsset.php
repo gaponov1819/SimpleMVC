@@ -13,7 +13,8 @@ use ItForFree\rusphp\File\Directory\Directory;
 class SimpleAsset
 {
    /**
-    * Путь относительно корня сайта к базовой директории
+    * Место расположения исходных файлов 
+    * --Путь относительно корня сайта к базовой директории
     * @var string 
     */
    public $basePath = 'test-source-path/';
