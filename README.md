@@ -6,3 +6,9 @@
 * Документация по работе с ядром в данный момент находится 
     в репозитории базового демонстрационного приложения: https://github.com/it-for-free/SimpleMVC-example . 
 
+## Полезные компоненты
+
+Некоторые компоненты SimpleMVC были сделаны отдельными пакетами, для удобства использования в боевых проектах:
+
+* `it-for-free/php-simple-assets` (менеджер JS и CSS): https://github.com/it-for-free/php-simple-assets
+
