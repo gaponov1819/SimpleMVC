@@ -9,37 +9,33 @@ use ItForFree\rusphp\File\Path;
  */
 class SimpleAssetManager
 {
+    /**
+     * @var string ОСНОВНОЙ парамерт конфигурации -- указывающий куда, относительно корня публиковать ассеты 
+     */
     public static $assetsPath = 'assets/';
     
-    /**
-     * Данные об используемых js файлвх
-     * @var array 
-     */
-    protected static $jsList = [];
-    
-    /**
-     * Данные об используемых CSS файлах
-     * @var array
-     */
-    protected static $cssList = [];
     
     /**
      * Массив объектов-ассетов, которые нужно будет использовать на странице 
      * (на которых был вызван метод ->add())
      * 
-     * @var array объектов ItForFree\SimpleMVC\components\SimpleAsset\SimpleAsset
+     * @var \ItForFree\SimpleMVC\components\SimpleAsset\SimpleAsset[] массив ассетов
      */
-    protected static $assets = [];
+    protected static $assets = array();
     
-    public static function printJs()
-    {
-        static::publishJs();
-        
-        foreach (static::$jsList as $js) {
-            echo("<script type=\"text/javascript\" src=\"$js\"></script>\n");
-        }
-    }
+    /**
+     *
+     * @var type 
+     */
+    protected static $sortedAssets = array();
     
+    /**
+     * Массив полных имен уже зарегистрированных классов/ассетов
+     * 
+     * @var array of string 
+     */
+    protected static $assetsNames;
+
     /**
      * Добавит ассет в глобальный список (зарегистрирует его)
      * 
@@ -47,30 +43,96 @@ class SimpleAssetManager
      */
     public static function addAsset($SimpleAssetObject)
     {
+        static::checkBasePublishingDirectoryExists();
+        static::addRequirements($SimpleAssetObject); 
         
-        if (!is_dir(static::getPublishBasePath())) {
-            throw new \Exception("Base asset dir {$Asset->basePath} not exists! ");
+        if (empty(static::$assetsNames) 
+           || !in_array(get_class($SimpleAssetObject), static::$assetsNames)) {
+            static::$assetsNames[] = get_class($SimpleAssetObject);
+            static::$assets[get_class($SimpleAssetObject)] = $SimpleAssetObject; 
         }
         
-        static::$assets[] = $SimpleAssetObject;
-        
-        foreach ($SimpleAssetObject->js as $jsFile) {
-            static::$jsList[] = [
-                'source' => $jsFile,
-                'assetClassName' => get_class($SimpleAssetObject),
-
-            ];
-        }
         $SimpleAssetObject->publish();
     }
-
-    protected static function publishJs()
+    
+    /**
+     * Добавляем (регистрируем) ассеты, от которых зависит данный $SimpleAssetObject
+     * 
+     * @param \ItForFree\SimpleMVC\components\SimpleAsset\SimpleAsset $SimpleAssetObject
+     */
+    protected static function addRequirements($SimpleAssetObject)
+    {
+        if (!empty($SimpleAssetObject->needs)) {
+            foreach ($SimpleAssetObject->needs as $assetName){
+                $assetName::add();
+            }
+        }
+    }
+    
+    /**
+     * Распечатает JS
+     */
+    public static function printJs()
+    {
+        echo static::getJsHtml();
+    }
+    
+    
+    /**
+     * Распечатает CSS
+     */
+    public static function printCss()
+    {
+        echo static::getCssHtml();
+    }
+  
+    /**
+     * Вернёт HTML код для JS
+     * @return string
+     */
+    public static function getJsHtml()
     {
         
+        $html = '';
+        foreach (static::$assets as $Asset) {
+            foreach ($Asset->publishedPaths['js'] as $filePath) {
+                $html .= "script type=\"text/javascript\" src=\""
+                        . Path::getWithoutDocumentRoot($filePath, true) ."\"></script>\n";
+            }
+        }
+        return $html;
+    }
+    
+    /**
+     *  Вернёт HTML код для Сss
+     * @return string
+     */
+    public static function getCssHtml()
+    {
+        $html = '';
+        foreach (static::$assets as $Asset) {
+            foreach ($Asset->publishedPaths['css'] as $filePath) {
+                $html .= 'link rel="stylesheet" type="text/css" href="'
+                        . Path::getWithoutDocumentRoot($filePath, true) ."\">\n";
+            }
+        }
+        return $html;
     }
     
     public static function getPublishBasePath()
     {
         return Path::addToDocumentRoot(static::$assetsPath);
+    }
+    
+    /**
+     * Проверит, что базовая для публикации директория в корне сайта 
+     * (ниже корневой папки) существует 
+     * @throws \Exception
+     */
+    protected static function checkBasePublishingDirectoryExists()
+    {
+        if (!is_dir(static::getPublishBasePath())) {
+            throw new \Exception("Base asset dir {$Asset->basePath} not exists! ");
+        }
     }
 }
