@@ -21,9 +21,7 @@
         {
            "type": "vcs",
            "url": "https://github.com/it-for-free/rusphp"
-        }
-    ],
-    "repositories": [
+        },
         {
            "type": "vcs",
            "url": "https://github.com/it-for-free/php-simple-assets"
