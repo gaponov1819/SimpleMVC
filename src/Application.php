@@ -2,6 +2,7 @@
 namespace ItForFree\SimpleMVC;
 
 use ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot;
+use ItForFree\SimpleMVC\ExceptionHandler;
 use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 use ItForFree\SimpleMVC\exceptions\SmvcConfigException;
 use ItForFree\rusphp\PHP\Object\ObjectFactory;
@@ -50,21 +51,27 @@ class Application
      */
     public function run() {
         
-        if (!empty($this->config)) {
-            $route = $this->getConfigObject('core.url.class')::getRoute();
-            /**
-             * @var ItForFree\SimpleMVC\Router
-             */
-            $Router = $this->getConfigObject('core.router.class');
-            
-            $Router->callControllerAction($route);
-            
-        } else {
-            throw new SmvcCoreException('Не задан конфигурационный массив приложения!');
-        }
+        $exceptionHandler = new ExceptionHandler();
+        try{
+            if (!empty($this->config)) {
+                $route = $this->getConfigObject('core.url.class')::getRoute();
+                /**
+                 * @var ItForFree\SimpleMVC\Router
+                 */
+                $Router = $this->getConfigObject('core.router.class');
 
+                $Router->callControllerAction($route);
+
+            } else {
+                throw new SmvcCoreException('Не задан конфигурационный массив приложения!');
+            }
+
+
+            return $this;
         
-        return $this;
+        } catch (Exception $exc) {
+            $exceptionHandler->handleException($exc);
+        }
     }
     
     /**

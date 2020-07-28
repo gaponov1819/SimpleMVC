@@ -1,9 +1,11 @@
 <?php
 
 namespace ItForFree\SimpleMVC;
-use ItForFree\SimpleMVC\Application;
 
-class ExceptionHandler
+use ItForFree\SimpleMVC\Config;
+use ItForFree\SimpleMVC\interfaces\ExceptionsHandler;
+
+class ExceptionHandler implements ExceptionsHandler
 {
     public function __construct()
     {
@@ -12,16 +14,23 @@ class ExceptionHandler
 
     public function handleException(\Exception $exception): void
     {
-        restore_error_handler();
-        restore_exception_handler();
-        $this->displayException($exception);
+        $handlers = Config::get('core.handlers');
+        foreach ($handlers as $exceptionName => $handlerName){
+            if ($exceptionName == get_class($exception)){
+                $thatHandler = Config::getObject('core.handlers.'.$exceptionName);
+                $thatHandler->handleException($exception);
+            }else{
+                $this->displayException($exception);
+            }
+        }
     }
 
     public function displayException($exception)
-    {        
-        $route = "error/";
+    {      
+        return $exception;
+        $route = 'error/';
         
-        $Router = Application::getConfigObject('core.router.class');
+        $Router = Config::getObject('core.router.class');
         $Router->callControllerAction($route, $exception);        
     }
 }
