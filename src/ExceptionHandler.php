@@ -3,9 +3,9 @@
 namespace ItForFree\SimpleMVC;
 
 use ItForFree\SimpleMVC\Config;
-use ItForFree\SimpleMVC\interfaces\ExceptionsHandler;
+use ItForFree\SimpleMVC\interfaces\ExceptionHandlerInterface;
 
-class ExceptionHandler implements ExceptionsHandler
+class ExceptionHandler implements ExceptionHandlerInterface
 {
     public function __construct()
     {
@@ -20,17 +20,9 @@ class ExceptionHandler implements ExceptionsHandler
                 $thatHandler = Config::getObject('core.handlers.'.$exceptionName);
                 $thatHandler->handleException($exception);
             }else{
-                $this->displayException($exception);
+                throw $exception;
             }
         }
     }
 
-    public function displayException($exception)
-    {      
-        return $exception;
-        $route = 'error/';
-        
-        $Router = Config::getObject('core.router.class');
-        $Router->callControllerAction($route, $exception);        
-    }
 }

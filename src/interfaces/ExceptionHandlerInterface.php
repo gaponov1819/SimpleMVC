@@ -4,9 +4,10 @@ namespace ItForFree\SimpleMVC\interfaces;
 /**
  *  Интерфейс для классов обработки ошибок
  */
-interface ExceptionsHandler
+interface ExceptionHandlerInterface
 {
     /**
+     * Метод для обработки перехваченной ошибки
      * 
      * @param \Exception $exception
      */

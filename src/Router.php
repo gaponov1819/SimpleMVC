@@ -49,17 +49,12 @@ class Router
      * @return $this
      * @throws SmvcRoutingException
      */
-    public function callControllerAction($route, $status=null)
+    public function callControllerAction($route)
     {
         $controllerName = $this->getControllerClassName($route);
         
-        $controllerFile = $this->getControllerFileName($controllerName);
-        if(!file_exists($controllerFile)) {
-            throw new SmvcRoutingException("Файл контроллера [$controllerFile] не найден.");
-        } else {
-            if (!class_exists($controllerName)) {
-                throw new SmvcRoutingException("Контроллер [$controllerName] не найден.");
-            } 
+        if (!class_exists($controllerName)) {
+            throw new SmvcRoutingException("Контроллер [$controllerName] не найден.");
         }
         
         $controller = new $controllerName();
@@ -73,11 +68,7 @@ class Router
                         . " [$methodName] для данного действия [$actionName] не найден.");
             }
 
-            if($status !== null) {
-                $controller->$methodName($status); // вызываем действие контроллера
-            } else {
-                $controller->$methodName();
-            }
+            $controller->$methodName(); // вызываем действие контроллера
         } else {
             throw  new SmvcAccessException("Доступ к маршруту $route запрещен.");
         }
@@ -143,17 +134,5 @@ class Router
     public function getControllerMethodName($action)
     {
         return $action . 'Action';
-    }
-    
-    /**
-     * Возвращает путь до файла контроллера относительно корневой дирректории
-     * @param type $controllerName
-     * @return type string
-     */
-    private function getControllerFileName($controllerName)
-    {
-        $urlFragments = explode('\\', $controllerName);
-        $res = implode('/', $urlFragments) . '.php';
-        return $_SERVER['DOCUMENT_ROOT']. '/..'. $res;
     }
 }
