@@ -4,8 +4,9 @@ namespace ItForFree\SimpleMVC;
 
 use ItForFree\SimpleMVC\Config;
 use ItForFree\SimpleMVC\interfaces\ExceptionHandlerInterface;
+use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 
-class ExceptionHandler implements ExceptionHandlerInterface
+class ExceptionHandler
 {
     public function __construct()
     {
@@ -25,9 +26,16 @@ class ExceptionHandler implements ExceptionHandlerInterface
         $handlers = Config::get('core.handlers');
         
         if(array_key_exists(get_class($exception), $handlers)){
+            
             $exceptionName = get_class($exception);
             $thatHandler = Config::getObject('core.handlers.'.$exceptionName);
-            $thatHandler->handleException($exception);
+            
+            if($thatHandler instanceof ExceptionHandlerInterface){
+                $thatHandler->handleException($exception);
+            } else {
+                throw new SmvcUsageException("Обработчик [$exceptionName] должен реализовывать интерфейс ItForFree\SimpleMVC\interfaces\ExceptionHandlerInterface.");
+            }
+            
         } else {
             throw $exception;
         }
