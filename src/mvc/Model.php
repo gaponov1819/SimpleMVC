@@ -77,8 +77,8 @@ class Model
      * Получает из БД все поля одной строки таблицы, с соответствующим Id
      * Возвращает объект класса модели.
      * 
-     * @param int $id  id строки
-     * @param string   $tableName  имя таблицы (необязатлеьный параметр)
+     * @param int    $id         id строки (кортежа)
+     * @param string $tableName  имя таблицы (необязатлеьный параметр)
      * 
      * @return \ItForFree\SimpleMVC\mvc\Model
      */
@@ -103,13 +103,11 @@ class Model
     }
    
     /**
-    * Возвращает все (или диапазон) объекты Article из базы данных
-    *
-    * @param int Optional Количество возвращаемых строк (по умолчанию = all)
-    * @param int Optional Вернуть статьи только из категории с указанным ID
-    * @param string Optional Столбц, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
-    * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
-    */  
+     * Извлечет данные и вернет массив моделей из базы данных.
+     * 
+     * @param int $numRows ограничение на число строк
+     * @return array
+     */
     public function getList($numRows=1000000)  
     {
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $this->tableName
@@ -129,7 +127,8 @@ class Model
 
         $sql = "SELECT FOUND_ROWS() AS totalRows"; //  получаем число выбранных строк
         $totalRows = $this->pdo->query($sql)->fetch();
-        return (array ("results" => $list, "totalRows" => $totalRows[0]));
+	
+        return (array("results" => $list, "totalRows" => $totalRows[0]));
     }
     
     /**
@@ -164,11 +163,12 @@ class Model
     }
   
     /**
-     * Инициллизирует поля модели из массива и вернет вновь созданный экземпляр класса.
+     * Инициллизирует поля модели из массива 
+     * и вернет вновь созданный экземпляр класса.
      * 
      * @todo проверить нужность.
      * 
-     * @param type $arr
+     * @param array $arr массив значений
      * @return \ItForFree\SimpleMVC\mvc\modelClassName
      */
     public function loadFromArray($arr)
