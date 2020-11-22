@@ -5,9 +5,10 @@ namespace ItForFree\SimpleMVC\mvc;
 use ItForFree\SimpleMVC\Config as Config;
 use ItForFree\SimpleMVC\Application;
 use ItForFree\rusphp\Log\SimpleEchoLog;
+
 /**
- * Модель -- используя конфиг, как минимум подключается к базе данных и даёт 
- * потомкам работать с соединением
+ * Базовый класс для модолей: используя конфиг приложения, как минимум подключается к базе данных и даёт 
+ * потомкам работать с соединением.
  */
 class Model 
 {
@@ -79,8 +80,7 @@ class Model
      * @return \ItForFree\SimpleMVC\mvc\Model
      */
     public function getById($id, $tableName = '')
-    {
-        
+    {  
         $tableName = !empty($tableName) ? $tableName : $this->tableName;
         
         $sql = "SELECT * FROM $tableName where id = :id";      
@@ -182,6 +182,5 @@ class Model
         $st = $this->pdo->prepare("DELETE FROM $this->tableName WHERE id = :id LIMIT 1" );
         $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
         $st->execute();
-
     }   
 }
