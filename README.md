@@ -12,3 +12,7 @@
 
 * `it-for-free/php-simple-assets` (менеджер JS и CSS): https://github.com/it-for-free/php-simple-assets
 
+## История изменений 
+
+* [Список основных изменений](CHANGELOG.md).
+
