@@ -8,10 +8,7 @@ use ItForFree\SimpleMVC\exceptions\SmvcUsageException;
 
 class ExceptionHandler
 {
-    public function __construct()
-    {
-        set_exception_handler(array($this, 'handleException'));
-    }
+   
     
     /**
      * Метод обработки исключения. Проверяет существует ли пользовательский обработчик.
