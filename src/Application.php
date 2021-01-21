@@ -69,7 +69,7 @@ class Application
 
             return $this;
         
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $exceptionHandler->handleException($exc);
         }
     }
