@@ -64,8 +64,8 @@ class Application
                 throw new SmvcCoreException('Не задан конфигурационный массив приложения!');
             }
 
-            return $this;
-        } catch (Exception $exc) {
+            return $this;   
+        } catch (\Exception $exc) {
             $exceptionHandler->handleException($exc);
         }
     }
