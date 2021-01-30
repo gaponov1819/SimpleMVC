@@ -14,7 +14,6 @@ use ItForFree\rusphp\PHP\Object\ObjectFactory;
  */
 class Application
 {
-    
     /**
      * Массив конфигурации приложенияъ
      * 
@@ -43,9 +42,10 @@ class Application
         return $instance;
     }
  
-
     /**
-     * Запускает приложение
+     * Запускает функционал ядра, 
+     * именно этот метод должно вызвать приложение, использущее SimpleMVC 
+     * для запуска системы
      * 
      * @param array $config Конфигурационный масиив приложения
      */
@@ -56,19 +56,15 @@ class Application
             if (!empty($this->config)) {
                 $route = $this->getConfigObject('core.url.class')::getRoute();
                 /**
-                 * @var ItForFree\SimpleMVC\Router
-                 */
+		 * @var \ItForFree\SimpleMVC\Router
+		 */
                 $Router = $this->getConfigObject('core.router.class');
-
-                $Router->callControllerAction($route);
-
+                $Router->callControllerAction($route); // определяем и вызываем нужно действие контроллера
             } else {
                 throw new SmvcCoreException('Не задан конфигурационный массив приложения!');
             }
 
-
             return $this;
-        
         } catch (Exception $exc) {
             $exceptionHandler->handleException($exc);
         }
@@ -86,7 +82,6 @@ class Application
         return $this;
     }
     
-
     /**
      * Вернёт элемент из массива конфигурации приложения
      * 

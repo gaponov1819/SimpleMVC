@@ -45,7 +45,8 @@ class Router
     /**
      * Вызовет действие контроллера, разобрав переданный маршрут
      * 
-     * @param srting $route маршрут: Любая строка (подразумевается, что это url или фрагмент), по которой можно определить вызываемый контроллер (класс) и его действие (метод)
+     * @param srting $route маршрут: Любая строка (подразумевается, что это url или фрагмент),
+     *	    по которой можно определить вызываемый контроллер (класс) и его действие (метод)
      * @return $this
      * @throws SmvcRoutingException
      */
@@ -60,8 +61,7 @@ class Router
             if (!class_exists($controllerName)) {
                 throw new SmvcRoutingException("Контроллер [$controllerName] не найден.");
             } 
-        }
-        
+        } 
         $controller = new $controllerName();
         $actionName = $this->getControllerActionName($route);
  
