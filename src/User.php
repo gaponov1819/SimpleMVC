@@ -1,5 +1,5 @@
 <?php
-namespace git ;
+namespace ItForFree\SimpleMVC;
 
 use ItForFree\SimpleMVC\Config;
 use ItForFree\SimpleMVC\mvc\Model;
