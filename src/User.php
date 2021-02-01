@@ -1,12 +1,14 @@
 <?php
-namespace ItForFree\SimpleMVC;
+namespace git ;
 
 use ItForFree\SimpleMVC\Config;
 use ItForFree\SimpleMVC\mvc\Model;
 
 /**
- * Абстрактный класс для работы с данными пользователя
- * @author qwe
+ * Абстрактный класс для работы с данными пользователя.
+ * 
+ * Наследует базовый классс модели, а потому потомки данного класса
+ * могут также работать как модели в рамках MVC.
  */
 abstract class User extends Model
 {
