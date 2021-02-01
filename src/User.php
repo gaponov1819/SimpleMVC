@@ -20,25 +20,10 @@ abstract class User extends Model
      */
     protected $Session = null;
     
-   /**
-    * Вернёт объект юзера
-    * 
-    * @staticvar type $instance
-    * @return \static
-    */
-    public final static function get()
-    {
-        static $instance = null; // статическая переменная
-        if (null === $instance) { // проверка существования
-            $instance = new static();
-        }
-        return $instance;
-    }
-    
     /** 
      * Скрываем конструктор для того чтобы класс нельзя было создать в обход getInstance 
      */
-    protected function __construct()
+    public function __construct()
     {
         parent::__construct();
         
@@ -58,9 +43,11 @@ abstract class User extends Model
     }
         
     /**
-     * Присваивает данной сессии имя пользователя и роль в соответствии с полученными данными
-     * @param type $userName
-     * @param type $pass
+     * Присваивает данной сессии имя пользователя 
+     * и роль в соответствии с полученными данными
+     * 
+     * @param srting $userName
+     * @param string $pass
      * @return boolean
      */
     public function login($login, $pass)
