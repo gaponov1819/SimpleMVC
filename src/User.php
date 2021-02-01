@@ -89,7 +89,6 @@ abstract class User extends Model
      */
     public function logout()
     {
-        
         $this->role = "";
         $this->userName = "";
         $this->Session->session['user'] = null;
