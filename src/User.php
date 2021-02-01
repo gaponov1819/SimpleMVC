@@ -25,9 +25,9 @@ abstract class User extends Model
     /** 
      * Скрываем конструктор для того чтобы класс нельзя было создать в обход getInstance 
      */
-    public function __construct()
+    public function __construct($data = null)
     {
-        parent::__construct();
+        parent::__construct($data);
         
         $this->Session = Config::getObject('core.session.class');
         $Session = $this->Session;
