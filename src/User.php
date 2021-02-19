@@ -13,7 +13,6 @@ use ItForFree\SimpleMVC\mvc\Model;
 abstract class User extends Model
 {
     public $role = null;
-    
     public $userName = null;
     
     /**
@@ -22,13 +21,9 @@ abstract class User extends Model
      */
     protected $Session = null;
     
-    /** 
-     * Скрываем конструктор для того чтобы класс нельзя было создать в обход getInstance 
-     */
+
     public function __construct($data = null)
     {
-        parent::__construct($data);
-        
         $this->Session = Config::getObject('core.session.class');
         $Session = $this->Session;
         if (!empty($Session->session['user']['role'])
@@ -42,14 +37,16 @@ abstract class User extends Model
             $this->role = 'guest';
             $this->userName = 'guest';
         }
+        
+        parent::__construct($data);
     }
         
     /**
      * Присваивает данной сессии имя пользователя 
      * и роль в соответствии с полученными данными
      * 
-     * @param srting $userName
-     * @param string $pass
+     * @param srting $login имя пользователя
+     * @param string $pass  пароль
      * @return boolean
      */
     public function login($login, $pass)
@@ -76,7 +73,8 @@ abstract class User extends Model
     protected abstract function getRoleByUserName($userName);
     
     /**
-     * Проверяет, можно ли авторизировать пользователя с данным логином и паролем
+     * Проверяет, можно ли авторизировать пользователя
+     *  с данным логином и паролем
      * 
      * @param string $login
      * @param string $pass
@@ -100,7 +98,8 @@ abstract class User extends Model
      * 
      * Проверяет разрешено ли данному пользовалю использвать данный маршрут.
      * Если полученный из роутера для данного маршрута контроллер не найден,
-     *  то считаем, что маршрут разрешён и не находится в ведении системы контроля доступа.
+     *  то считаем, что маршрут разрешён и не находится
+     *  в ведении системы контроля доступа.
      * 
      * @param string $route маршрут
      * @return boolean  доступен ли он данном пользователю
@@ -114,7 +113,9 @@ abstract class User extends Model
         $controllerName = $Router->getControllerClassName($route);
         
         if (!class_exists($controllerName)) {
-//            throw new SmvcUsageException("Контроллер не найден.");
+            throw new SmvcUsageException("Контроллер '$controllerName',"
+                    . " соответствущий переданному"
+                    . " для контроля доступа маршруту '$route' не найден.");
             $result = true;
         } else {
         
@@ -140,9 +141,10 @@ abstract class User extends Model
     
     
     /**
-     * Вернёт массив с выкладкой (пояснением) по параметрам, влияющим на доступ пользоватлея к маршруту
+     * Вернёт массив с выкладкой (пояснением) по параметрам,
+     * влияющим на доступ пользоватлея к маршруту
      * 
-     * @param  string $route
+     * @param  string $route  маршрут
      * @return array
      */
     public function explainAccess($route)
