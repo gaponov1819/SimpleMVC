@@ -28,7 +28,7 @@ class View
     public $layoutPath = '/';
     
     /**
-     * @var string  gолный путь к базовой директории шаблонов
+     * @var string  полный путь к базовой директории шаблонов
      */
     public $layoutsBasePath = '/';
     
