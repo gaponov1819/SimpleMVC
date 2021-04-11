@@ -56,8 +56,8 @@ class Application
             if (!empty($this->config)) {
                 $route = $this->getConfigObject('core.url.class')::getRoute();
                 /**
-		 * @var \ItForFree\SimpleMVC\Router
-		 */
+                 * @var type \ItForFree\SimpleMVC\Router
+                 */
                 $Router = $this->getConfigObject('core.router.class');
                 $Router->callControllerAction($route); // определяем и вызываем нужно действие контроллера
             } else {
