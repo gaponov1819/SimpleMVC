@@ -31,7 +31,7 @@ class Application
      * Метод для получения текущего объекта приложения
      * 
      * @staticvar type $instance
-     * @return ItForFree\SimpleMVC\Applicaion объект приложения
+     * @return Application объект приложения
      */
     public static function get()
     {
@@ -56,7 +56,7 @@ class Application
             if (!empty($this->config)) {
                 $route = $this->getConfigObject('core.url.class')::getRoute();
                 /**
-                 * @var type \ItForFree\SimpleMVC\Router
+                 * @var Router
                  */
                 $Router = $this->getConfigObject('core.router.class');
                 $Router->callControllerAction($route); // определяем и вызываем нужно действие контроллера
