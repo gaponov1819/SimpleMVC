@@ -38,10 +38,31 @@ class Model
      */
     public function __construct($data = null) 
     {
-        $this->setPdoSettings();
+        // $this->setPdoSettings();
         if (is_array($data)) {
             $this->setObjectVars($this, $data);
         }
+    }
+    
+    /**
+     * Магический метод для перехвата обращения к свойствам
+     * 
+     * @staticvar type $pdo
+     * @param string $name
+     * @return type
+     */
+    public function  __get (string $name)
+    {
+	static $pdo = null;
+	if ($name === 'pdo') {
+	    if ($pdo) {
+		return $pdo;
+	    } else {
+		$pdo = $this->setPdoSettings();
+	    }
+	    
+	    return $pdo;
+	}
     }
     
     /**
@@ -59,18 +80,19 @@ class Model
     } 
     
     /**
-     * Устанавливает настройки доступа к БД и сохраяет объект PDO в одноименное свойство модели
+     *  Устанавливает настройки доступа к БД и сохраяет объект PDO в одноименное свойство модели
      *  ($this->pdo)
      */
     protected function setPdoSettings()
     {
         $dbSettings = Application::getConfigElement('core.db');
-        $this->pdo = new \PDO($dbSettings['dns'], 
+        $pdo = new \PDO($dbSettings['dns'], 
                 $dbSettings['username'],
                 $dbSettings['password'],
                 array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'')
         );
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+	return $pdo;
     }
    
     /**
