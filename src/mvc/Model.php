@@ -82,6 +82,8 @@ class Model
     /**
      *  Устанавливает настройки доступа к БД и сохраяет объект PDO в одноименное свойство модели
      *  ($this->pdo)
+     * 
+     * @return \PDO
      */
     protected function setPdoSettings()
     {
