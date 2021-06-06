@@ -1,32 +1,39 @@
 {
     "name": "it-for-free/simple-mvc",
     "type": "cms",
-    "description": "Пример движка MVC",
-    "keywords": ["php", "itforfree", "mvc", "framework", "simple"],
+    "description": "\u041f\u0440\u0438\u043c\u0435\u0440 \u0434\u0432\u0438\u0436\u043a\u0430 MVC",
+    "keywords": [
+        "php",
+        "itforfree",
+        "mvc",
+        "framework",
+        "simple"
+    ],
     "homepage": "http://fkn.ktu10.com/?q=forum/133",
-     
     "autoload": {
         "psr-4": {
             "ItForFree\\SimpleMVC\\": "src"
         }
     },
-    
     "require": {
         "php": ">=7.2",
         "ext-pdo_mysql": "*",
         "it-for-free/rusphp": "v2.*",
         "it-for-free/php-simple-assets": "dev-master"
     },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
+    },
     "repositories": [
         {
-           "type": "vcs",
-           "url": "https://github.com/it-for-free/rusphp"
+            "type": "vcs",
+            "url": "https://github.com/it-for-free/rusphp"
         },
         {
-           "type": "vcs",
-           "url": "https://github.com/it-for-free/php-simple-assets"
+            "type": "vcs",
+            "url": "https://github.com/it-for-free/php-simple-assets"
         }
     ]
-    
-    
 }
