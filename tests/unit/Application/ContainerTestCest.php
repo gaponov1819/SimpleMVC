@@ -2,10 +2,12 @@
 
 use ItForFree\SimpleMVC\Application;
 
+require __DIR__ . '/support/ExampleUser.php';
+
 class ContainerTestCest
 {
     public function _before(UnitTester $I)
-    {
+    {	
     }
 
     // tests
@@ -14,6 +16,7 @@ class ContainerTestCest
         $config = require(codecept_data_dir() . '/container/user-session-config.php');
         $App = Application::get();
         $App->setConfiguration($config);
-        $App->getConfigObject('core.user.class');
+        $User = $App->getConfigObject('core.user.class');
+	$a = '123';
     }
 }
