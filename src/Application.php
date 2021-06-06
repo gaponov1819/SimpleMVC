@@ -17,7 +17,7 @@ class Application
     /**
      * Массив конфигурации приложенияъ
      * 
-     * @var ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot
+     * @var \ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot
      */
     protected $config = null;
     
@@ -30,8 +30,7 @@ class Application
     /**
      * Метод для получения текущего объекта приложения
      * 
-     * @staticvar type $instance
-     * @return Application объект приложения
+     * @return \ItForFree\SimpleMVC\Applicaion объект приложения
      */
     public static function get()
     {
