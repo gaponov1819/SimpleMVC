@@ -120,12 +120,12 @@ class Application
         $fullClassName = self::getConfigElement($inConfigArrayPath);
         
         if (!class_exists($fullClassName)) {
-            throw new SmvcConfigException("Вы  запросили получение экземпляра класса "
+            throw new SmvcConfigException("Вы запросили получение экземпляра класса "
                 . "$fullClassName "
-                . " (был добавлен в конфиг по адресу $fullClassName),"
-                . " но такой класс не был ранее объеляен, "
-                . "убедитесь чтобы его код подключен "
-                . "до  обращения к экземпляру объекта ");
+                . " (т.к. он был добавлен в конфиг по адресу $fullClassName),"
+                . " но такой класс не был ранее объявляен, "
+                . "убедитесь в том, что его код подключен "
+                . "до обращения к экземпляру объекта. ");
         }
             $paramsPath = static::getPathParams($inConfigArrayPath);
             if($paramsPath) $params = self::getConfigElement($paramsPath, false);
