@@ -16,14 +16,14 @@ use ItForFree\rusphp\PHP\ArrayLib\Structure;
 class Application
 {
     /**
-     * Массив конфигурации приложенияъ
+     * Массив конфигурации приложения
      * 
      * @var ItForFree\rusphp\PHP\ArrayLib\DotNotation\Dot
      */
     protected $config = null;
 
     /**
-     * 
+     * Кэш контейнера (конфигурируемых компонентов приложения)
      */
     protected $containerElements = array();
     
@@ -167,7 +167,11 @@ class Application
     }
     
     
-    protected static function getInstanceOrSingletone($className, $constructParams = [], $publicParams = [], $singletoneInstanceAccessStaticMethodName = 'get', )
+    protected static function getInstanceOrSingletone(
+		$className, 
+		$constructParams = [],
+		$publicParams = [], 
+		$singletoneInstanceAccessStaticMethodName = 'get')
     {
        $result = null;
        if (\ItForFree\rusphp\PHP\Object\ObjectClass\Constructor::isPublic($className)) {
