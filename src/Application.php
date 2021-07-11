@@ -25,7 +25,10 @@ class Application
     /**
      * Кэш контейнера (конфигурируемых компонентов приложения)
      */
-    protected $containerElements = array();
+    protected $containerElements = [
+		'elements' => [],
+		'objects' => [],
+	];
     
     /**
      * Cкрываем конструктор для того чтобы класс нельзя было создать в обход get() 
@@ -47,11 +50,16 @@ class Application
         return $instance;
     }
     
-    public static function addElementToConteiner($nameClass, $element)
+    public static function addElementToConteiner($configPath, $element)
     {
         $object = new Application;
-        $object->containerElements[$nameClass] = $element;
-//        $this->containerElements[] = $element;
+        $object->containerElements['elements'][$configPath] = $element;
+    }
+	
+	public static function addObjectToConteiner($configPath, $object)
+    {
+        $object = new Application;
+        $object->containerElements['objects'][$configPath] = $object;
     }
  
     /**
@@ -104,20 +112,25 @@ class Application
      */
     public static function getConfigElement($inConfigArrayPath, $withException = true)
     {
-        if (empty(self::get()->config)) {
+		if (empty(self::get()->config)) {
             throw new SmvcUsageException('Не задан конфигурационный массив приложения!');
         }
         
-        if (isset(self::get()->containerElements[$inConfigArrayPath])) return $this->containerElements[$inConfigArrayPath];
+        if (isset(self::get()->containerElements['elements'][$inConfigArrayPath])) {
+			return $this->containerElements['elements'][$inConfigArrayPath];
+		} else {
         
-        $configValue = self::get()->config->get($inConfigArrayPath);
-       
-        if ($withException && is_null($configValue)) {
-           throw new SmvcConfigException("Элемент с данным путём [$inConfigArrayPath]"
-                   . " отсутствует в конфигурационном массиве приложения!");
-        }
-        
-        return $configValue;
+			$configValue = self::get()->config->get($inConfigArrayPath);
+
+			if ($withException && is_null($configValue)) {
+			   throw new SmvcConfigException("Элемент с данным путём [$inConfigArrayPath]"
+					   . " отсутствует в конфигурационном массиве приложения!");
+			}
+
+			$this->containerElements['elements'][$inConfigArrayPath] = $configValue;
+			self::addElementToConteiner($inConfigArrayPath, $configValue);
+			return $configValue;
+		}
     }
     
     /**
@@ -134,7 +147,10 @@ class Application
         $constructParams = array();
         $fullClassName = self::getConfigElement($inConfigArrayPath);
 
-        if (isset(self::get()->containerElements[$fullClassName])) return self::get()->containerElements[$fullClassName];
+        if (isset(self::get()->containerElements['objects'][$inConfigArrayPath])) 
+		{ 
+			return self::get()->containerElements['objects'][$inConfigArrayPath];
+		} else {
         
         if (!class_exists($fullClassName)) {
             throw new SmvcConfigException("Вы запросили получение экземпляра класса "
@@ -145,9 +161,15 @@ class Application
                 . "до обращения к экземпляру объекта. ");
         }
             $pathConstructParams = static::getPathParams($inConfigArrayPath, 'construct');
-            if ($pathConstructParams) $constructParams = self::getConfigElement($pathConstructParams, false);
+            if ($pathConstructParams)  {
+				$constructParams = self::getConfigElement($pathConstructParams, false);
+			}
+			
             $paramsPath = static::getPathParams($inConfigArrayPath, 'params');
-            if($paramsPath) $params = self::getConfigElement($paramsPath, false);
+            if ($paramsPath) { 
+				$params = self::getConfigElement($paramsPath, false);
+			}
+			
             if (!empty($params)) {
                 foreach($params as $param) {
                     if (static::isAlias($param)) {
@@ -162,8 +184,10 @@ class Application
                     }
                 }
             }
-
-        return static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
+            $newObject = static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
+			self::addObjectToConteiner($inConfigArrayPath, $newObject);
+			return $newObject;
+		}
     }
     
     
@@ -178,9 +202,7 @@ class Application
           if (!empty($constructParams))
           {
               $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
-          }
-          else 
-          {
+          } else {
                $result = new $className;
           }
           if (!empty($publicParams)) {
