@@ -19,24 +19,24 @@ abstract class User extends Model
      * для хранения объекта обеспечивающего доступ к сессии
      * @var ItForFree\SimpleMVC\Session 
      */
-    protected $Session = null;
+    public $Session = null;
     
 
-    public function __construct($data = null)
+    public function __construct($data = null, $session = null)
     {
-       $this->Session = Config::getObject('core.session.class');
-        $Session = $this->Session;
-        if (!empty($Session->session['user']['role'])
-                && !empty($Session->session['user']['userName'])) {
-            $this->role = $Session->session['user']['role'];
-            $this->userName = $Session->session['user']['userName'];
-        }
-        else {
-            $Session->session['user']['role'] = 'guest';
-            $Session->session['user']['userName'] = 'guest';
-            $this->role = 'guest';
-            $this->userName = 'guest';
-        }
+//       $this->Session = Config::getObject('core.session.class');
+//        $Session = $this->Session;
+//        if (!empty($Session->session['user']['role'])
+//                && !empty($Session->session['user']['userName'])) {
+//            $this->role = $Session->session['user']['role'];
+//            $this->userName = $Session->session['user']['userName'];
+//        }
+//        else {
+//            $Session->session['user']['role'] = 'guest';
+//            $Session->session['user']['userName'] = 'guest';
+//            $this->role = 'guest';
+//            $this->userName = 'guest';
+//        }
         
         parent::__construct($data);
     }

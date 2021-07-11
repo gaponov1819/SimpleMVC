@@ -8,6 +8,11 @@ namespace application\models;
  */
 class ExampleUser extends \ItForFree\SimpleMVC\User 
 {
+    public function __construct()
+    {
+        parent::__construct(); 
+    }
+    
     protected function checkAuthData($login, $pass) 
     {
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ItForFree\SimpleMVC;
+namespace application\models;
 
 /**
  * Класс для работы с массивом $_SESSION
@@ -9,7 +9,7 @@ namespace ItForFree\SimpleMVC;
  *
  * @author qwe
  */
-class Session 
+class Session extends \ItForFree\SimpleMVC\Session
 {
     public $session = null; //$_SESSION
     

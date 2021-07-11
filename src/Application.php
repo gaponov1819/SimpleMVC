@@ -22,6 +22,10 @@ class Application
      */
     protected $config = null;
 
+    /**
+     * 
+     */
+    protected $containerElements = array();
     
     /**
      * Cкрываем конструктор для того чтобы класс нельзя было создать в обход get() 
@@ -41,6 +45,13 @@ class Application
             $instance = new static();
         }
         return $instance;
+    }
+    
+    public static function addElementToConteiner($nameClass, $element)
+    {
+        $object = new Application;
+        $object->containerElements[$nameClass] = $element;
+//        $this->containerElements[] = $element;
     }
  
     /**
@@ -97,6 +108,8 @@ class Application
             throw new SmvcUsageException('Не задан конфигурационный массив приложения!');
         }
         
+        if (isset(self::get()->containerElements[$inConfigArrayPath])) return $this->containerElements[$inConfigArrayPath];
+        
         $configValue = self::get()->config->get($inConfigArrayPath);
        
         if ($withException && is_null($configValue)) {
@@ -115,9 +128,13 @@ class Application
      */
     public static function getConfigObject($inConfigArrayPath)
     {
+       
         $params = array();
         $publicParams = array();
+        $constructParams = array();
         $fullClassName = self::getConfigElement($inConfigArrayPath);
+
+        if (isset(self::get()->containerElements[$fullClassName])) return self::get()->containerElements[$fullClassName];
         
         if (!class_exists($fullClassName)) {
             throw new SmvcConfigException("Вы запросили получение экземпляра класса "
@@ -127,33 +144,41 @@ class Application
                 . "убедитесь в том, что его код подключен "
                 . "до обращения к экземпляру объекта. ");
         }
-            $paramsPath = static::getPathParams($inConfigArrayPath);
+            $pathConstructParams = static::getPathParams($inConfigArrayPath, 'construct');
+            if ($pathConstructParams) $constructParams = self::getConfigElement($pathConstructParams, false);
+            $paramsPath = static::getPathParams($inConfigArrayPath, 'params');
             if($paramsPath) $params = self::getConfigElement($paramsPath, false);
             if (!empty($params)) {
                 foreach($params as $param) {
-                    $conf = self::get()->config;
                     if (static::isAlias($param)) {
                         $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
                         $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
                         $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
                         if (!empty($elementInConfigByParthAlias)) {
-                            self::getConfigObject($pathToTheDesiredElement);
+                            $publicParams[] = self::getConfigObject($pathToTheDesiredElement);
                         } else {
-                            $param = $pathToTheDesiredElement;
+                            $publicParams[] = $pathToTheDesiredElement;
                         }  
                     }
                 }
             }
 
-        return static::getInstanceOrSingletone($fullClassName, $publicParams);
+        return static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
     }
     
     
-    protected static function getInstanceOrSingletone($className, $publicParams = [], $singletoneInstanceAccessStaticMethodName = 'get', )
+    protected static function getInstanceOrSingletone($className, $constructParams = [], $publicParams = [], $singletoneInstanceAccessStaticMethodName = 'get', )
     {
        $result = null;
        if (\ItForFree\rusphp\PHP\Object\ObjectClass\Constructor::isPublic($className)) {
-          $result = new $className;
+          if (!empty($constructParams))
+          {
+              $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
+          }
+          else 
+          {
+               $result = new $className;
+          }
           if (!empty($publicParams)) {
             ObjectFactory::setPublicParams($result, $publicParams);
           }
@@ -162,15 +187,16 @@ class Application
                 . $singletoneInstanceAccessStaticMethodName); 
        }
        
+       self::addElementToConteiner($className, $result);
        return $result;
     }
     
-    protected static function getPathParams($PathClassName) {
+    protected static function getPathParams($PathClassName, $additionPart) {
         
         $pathParams = explode('.', $PathClassName);
-        return $pathParams[0] . '.' . $pathParams[1] . '.' . 'params';
+        return $pathParams[0] . '.' . $pathParams[1] . '.' . $additionPart;
     }
-    
+
     protected static function isAlias($param)
     {
         if(strpos($param, '@') === 0) return true;

@@ -12,10 +12,11 @@ $config = [
                 'param3' => 'param3',
                 'param4' => 'param4',
                 'param5' => 'param5'
-            ]
+            ],
+            'construct' => ['session' => '@session'],  
         ],
         'session' => [ // подсистема работы с сессиями
-            'class' => ItForFree\SimpleMVC\Session::class,
+            'class' => \application\models\Session::class,
             'alias' => '@session'
         ]
     ]    
