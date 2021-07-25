@@ -6,18 +6,14 @@ require __DIR__ . '/support/containerElementsCaching/OneClassCache.php';
 require __DIR__ . '/support/containerDependecyRecurcivelyCreation/First.php';
 require __DIR__ . '/support/containerDependecyRecurcivelyCreation/Second.php';
 
-class ContainerTestCest extends \Codeception\Test\Unit
+class ContainerTest extends \Codeception\Test\Unit
 {
-
-    
-//    public function _before(UnitTester $I)
-//    {	   
-//    }
-
+    protected $tester;
     
         // tests  
-    public function createDependecyRecurcivelyTest(UnitTester $I)
+    public function testCreateDependecyRecurcivelyTest()
     {
+	$I = $this->tester;
         $config = require(codecept_data_dir() . '/container/dependecy-recurcively-creation-config.php');
         $App = Application::get();
         $App->setConfiguration($config);
@@ -25,8 +21,10 @@ class ContainerTestCest extends \Codeception\Test\Unit
         $I->assertSame($App->getConfigObject('core.second.class'), $First->second);
     }
     
-    public function cachingTest(UnitTester $I)
+    public function testCachingTest()
     {
+	$I = $this->tester;
+	
         $config = require(codecept_data_dir() . '/container/test-cache-config.php');
         $App = Application::get();
         $App->setConfiguration($config);
