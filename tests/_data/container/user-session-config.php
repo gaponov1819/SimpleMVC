@@ -13,7 +13,9 @@ $config = [
                 'param4' => 'param4',
                 'param5' => 'param5'
             ],
-            'construct' => ['session' => '@session'],  
+            'construct' => [
+                'session' => '@session',
+              ],  
         ],
         'session' => [ // подсистема работы с сессиями
             'class' => \application\models\Session::class,

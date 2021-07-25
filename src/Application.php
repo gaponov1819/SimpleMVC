@@ -30,6 +30,8 @@ class Application
 		'objects' => [],
 	];
     
+    public static $countCreateObjects = null;
+    
     /**
      * Cкрываем конструктор для того чтобы класс нельзя было создать в обход get() 
      */
@@ -52,14 +54,13 @@ class Application
     
     public static function addElementToConteiner($configPath, $element)
     {
-        $object = new Application;
-        $object->containerElements['elements'][$configPath] = $element;
+        
+        self::get()->containerElements['elements'][$configPath] = $element;
     }
 	
 	public static function addObjectToConteiner($configPath, $object)
     {
-        $object = new Application;
-        $object->containerElements['objects'][$configPath] = $object;
+        self::get()->containerElements['objects'][$configPath] = $object;
     }
  
     /**
@@ -117,7 +118,7 @@ class Application
         }
         
         if (isset(self::get()->containerElements['elements'][$inConfigArrayPath])) {
-			return $this->containerElements['elements'][$inConfigArrayPath];
+			return self::get()->containerElements['elements'][$inConfigArrayPath];
 		} else {
         
 			$configValue = self::get()->config->get($inConfigArrayPath);
@@ -126,8 +127,6 @@ class Application
 			   throw new SmvcConfigException("Элемент с данным путём [$inConfigArrayPath]"
 					   . " отсутствует в конфигурационном массиве приложения!");
 			}
-
-			$this->containerElements['elements'][$inConfigArrayPath] = $configValue;
 			self::addElementToConteiner($inConfigArrayPath, $configValue);
 			return $configValue;
 		}
@@ -141,53 +140,32 @@ class Application
      */
     public static function getConfigObject($inConfigArrayPath)
     {
-       
-        $params = array();
         $publicParams = array();
         $constructParams = array();
         $fullClassName = self::getConfigElement($inConfigArrayPath);
 
+        $currentConteiner = self::get()->containerElements;
         if (isset(self::get()->containerElements['objects'][$inConfigArrayPath])) 
 		{ 
 			return self::get()->containerElements['objects'][$inConfigArrayPath];
 		} else {
-        
-        if (!class_exists($fullClassName)) {
-            throw new SmvcConfigException("Вы запросили получение экземпляра класса "
-                . "$fullClassName "
-                . " (т.к. он был добавлен в конфиг по адресу $fullClassName),"
-                . " но такой класс не был ранее объявляен, "
-                . "убедитесь в том, что его код подключен "
-                . "до обращения к экземпляру объекта. ");
-        }
-            $pathConstructParams = static::getPathParams($inConfigArrayPath, 'construct');
-            if ($pathConstructParams)  {
-				$constructParams = self::getConfigElement($pathConstructParams, false);
-			}
-			
-            $paramsPath = static::getPathParams($inConfigArrayPath, 'params');
-            if ($paramsPath) { 
-				$params = self::getConfigElement($paramsPath, false);
-			}
-			
-            if (!empty($params)) {
-                foreach($params as $param) {
-                    if (static::isAlias($param)) {
-                        $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
-                        $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
-                        $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
-                        if (!empty($elementInConfigByParthAlias)) {
-                            $publicParams[] = self::getConfigObject($pathToTheDesiredElement);
-                        } else {
-                            $publicParams[] = $pathToTheDesiredElement;
-                        }  
-                    }
-                }
-            }
-            $newObject = static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
-			self::addObjectToConteiner($inConfigArrayPath, $newObject);
-			return $newObject;
-		}
+
+                            if (!class_exists($fullClassName)) {
+                                throw new SmvcConfigException("Вы запросили получение экземпляра класса "
+                                    . "$fullClassName "
+                                    . " (т.к. он был добавлен в конфиг по адресу $fullClassName),"
+                                    . " но такой класс не был ранее объявляен, "
+                                    . "убедитесь в том, что его код подключен "
+                                    . "до обращения к экземпляру объекта. ");
+                            }
+                            
+                            $constructParams = self::getCounstractParams($inConfigArrayPath);
+                            $publicParams = self::getPablicParams($inConfigArrayPath);
+                            
+                            $newObject = static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
+                            self::addObjectToConteiner($inConfigArrayPath, $newObject);
+                            return $newObject;
+                        }
     }
     
     
@@ -213,11 +191,12 @@ class Application
                 . $singletoneInstanceAccessStaticMethodName); 
        }
        
-       self::addElementToConteiner($className, $result);
+       self::addObjectToConteiner($className, $result);
        return $result;
     }
     
-    protected static function getPathParams($PathClassName, $additionPart) {
+    protected static function getPathParams($PathClassName, $additionPart) 
+    {
         
         $pathParams = explode('.', $PathClassName);
         return $pathParams[0] . '.' . $pathParams[1] . '.' . $additionPart;
@@ -226,5 +205,55 @@ class Application
     protected static function isAlias($param)
     {
         if(strpos($param, '@') === 0) return true;
+    }
+    
+    protected static function getPablicParams($inConfigArrayPath) 
+    {
+        $publicParams = array();
+        $paramsPath = static::getPathParams($inConfigArrayPath, 'params');
+        
+        if ($paramsPath) { 
+            $params = self::getConfigElement($paramsPath, false);
+        }
+
+        if (!empty($params)) {
+            foreach($params as $param) {
+                if (static::isAlias($param)) {
+                    $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
+                    $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
+                    $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
+                    if (!empty($elementInConfigByParthAlias)) {
+                        $publicParams[substr($param, 1)] = self::getConfigObject($pathToTheDesiredElement);
+                    } else {
+                        $publicParams[] = $pathToTheDesiredElement;
+                    }  
+                }
+            }
+        }
+        return $publicParams;                    
+    }
+    
+    protected static function getCounstractParams($inConfigArrayPath)
+    {
+        $readyCounstractParams = array();
+        $pathConstructParams = static::getPathParams($inConfigArrayPath, 'construct');
+        if ($pathConstructParams)  {
+            $constructParams = self::getConfigElement($pathConstructParams, false);
+        }
+                            
+        if (!empty($constructParams)) 
+        {
+            foreach($constructParams as $param) {
+                if (static::isAlias($param)) {
+                    $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
+                    $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
+                    $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
+                    if (!empty($elementInConfigByParthAlias)) {
+                        $readyCounstractParams[$param] = $pathToTheDesiredElement;
+                    } 
+                }
+            }
+        }   
+        return $readyCounstractParams; 
     }
 }

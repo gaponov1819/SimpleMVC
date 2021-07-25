@@ -12,7 +12,8 @@ namespace application\models;
 class Session extends \ItForFree\SimpleMVC\Session
 {
     public $session = null; //$_SESSION
-    
+       
+    public $user = null;
     /**
     * Вернёт объект класса Session
     * 
@@ -34,7 +35,10 @@ class Session extends \ItForFree\SimpleMVC\Session
     {   
         session_start();
         $this->session = &$_SESSION;
-        
+        if (empty($this->user)){
+            $this->user['role'] = 'guest';
+            $this->user['userName'] = 'guest';
+        }   
     }
     
 }

@@ -37,6 +37,13 @@ abstract class User extends Model
 //            $this->role = 'guest';
 //            $this->userName = 'guest';
 //        }
+        if (empty($session)) {
+            $this->role = 'guest';
+            $this->userName = 'guest';
+        } else {
+            $this->role = $session->user['role'];
+            $this->userName = $session->user['userName'];
+        }
         
         parent::__construct($data);
     }
