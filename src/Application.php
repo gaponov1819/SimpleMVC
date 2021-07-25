@@ -29,9 +29,7 @@ class Application
 		'elements' => [],
 		'objects' => [],
 	];
-    
-    public static $countCreateObjects = null;
-    
+        
     /**
      * Cкрываем конструктор для того чтобы класс нельзя было создать в обход get() 
      */

@@ -6,26 +6,18 @@ use application\models\Session;
 
 require __DIR__ . '/support/ExampleUser.php';
 require __DIR__ . '/support/Session.php';
-
+require __DIR__ . '/support/testCache/OneClassCache.php';
 
 class ContainerTestCest extends \Codeception\Test\Unit
 {
     private $expectedResult;
-    
-    public static $countObjects = null;
+   
     
 //    public function _before(UnitTester $I)
 //    {	   
 //    }
 
-    // tests
-    
-    public function tryToTest(UnitTester $I)
-    {
-        $I->assertSame(1, 1);
-    }
-    
-    
+    // tests  
     public function createDependecyRecurcively(UnitTester $I)
     {
         $config = require(codecept_data_dir() . '/container/user-session-config.php');
@@ -37,17 +29,17 @@ class ContainerTestCest extends \Codeception\Test\Unit
     
     public function cacheTest(UnitTester $I)
     {
-        $config = require(codecept_data_dir() . '/container/user-session-config.php');
+        $config = require(codecept_data_dir() . '/container/test-cache-config.php');
         $App = Application::get();
         $App->setConfiguration($config);
-        $ObjectOne = $App->getConfigObject('core.user.class');
-        $I->assertSame(1, Application::$countCreateObjects);
-        $ObjectTwo = $App->getConfigObject('core.session.class');
-        $I->assertSame(2, Application::$countCreateObjects);
-        $ObjectThree = $App->getConfigObject('core.session.class');
-        $I->assertSame(2, Application::$countCreateObjects);
-        $ObjectFour = $App->getConfigObject('core.user.class');
-        $I->assertSame(2, Application::$countCreateObjects);
+        $ObjectOne = $App->getConfigObject('core.OneClassCache.class');
+        $I->assertSame(1, $ObjectOne::$countCreateObject);
+        $ObjectTwo = $App->getConfigObject('core.OneClassCache.class');
+        $I->assertSame(1, $ObjectTwo::$countCreateObject);
+        $ObjectThree = $App->getConfigObject('core.OneClassCache.class');
+        $I->assertSame(1, $ObjectThree::$countCreateObject);
+        $ObjectFour = $App->getConfigObject('core.OneClassCache.class');
+        $I->assertSame(1, $ObjectFour::$countCreateObject);
         $a = 10;
     }
 }
