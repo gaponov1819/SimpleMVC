@@ -4,9 +4,11 @@
  */
 $config = [
     'core' => [ // подмассив используемый самим ядром фреймворка
-        'OneClassCache' => [ // подсистема авторизации
-            'class' => \application\models\testCache\OneClassCache::class,
-            
+        'first' => [ // подсистема авторизации
+            'class' => \application\models\testCache\OneClassCache::class, 
+        ],
+        'second' => [ // подсистема авторизации
+            'class' => \application\models\testCache\OneClassCache::class, 
         ],
     ]    
 ];

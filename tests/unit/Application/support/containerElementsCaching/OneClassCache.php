@@ -1,6 +1,6 @@
 <?php
 
-namespace application\models\testCache;
+namespace application\models\containerElementsCaching;
 
 use ItForFree\SimpleMVC\mvc\Model;
 /*

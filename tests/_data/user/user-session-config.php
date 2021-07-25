@@ -18,7 +18,7 @@ $config = [
               ],  
         ],
         'session' => [ // подсистема работы с сессиями
-            'class' => \application\models\Session::class,
+            'class' => ItForFree\SimpleMVC\Session::class,
             'alias' => '@session'
         ]
     ]    
