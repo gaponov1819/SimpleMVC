@@ -4,6 +4,7 @@ use ItForFree\SimpleMVC\Application;
 
 require __DIR__ . '/support/containerElementsCaching/OneClassCache.php';
 require __DIR__ . '/support/containerDependecyRecurcivelyCreation/First.php';
+require __DIR__ . '/support/containerDependecyRecurcivelyCreation/Second.php';
 
 class ContainerTestCest extends \Codeception\Test\Unit
 {

@@ -1,5 +1,5 @@
 <?php
-namespace application\models\containerDependecyRecurcivelyCreation;
+namespace application\models\dependecy;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,7 +16,7 @@ class First {
     //put your code here
     public $property = null;
     
-    public function _construct()
+    public function __construct()
     {
         $this->property = '1024';
     }

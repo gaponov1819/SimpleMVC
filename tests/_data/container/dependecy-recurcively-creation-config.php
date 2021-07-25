@@ -5,7 +5,7 @@
 $config = [
     'core' => [ 
         'first' => [ 
-            'class' => application\models\dependecy\First::class,
+            'class' => \application\models\dependecy\First::class,
             'params' => [
                 'session' => '@second',
                 'param2' => 'param2',
@@ -18,7 +18,7 @@ $config = [
               ],  
         ],
         'second' => [ 
-            'class' => application\models\dependecy\Second::class,
+            'class' => \application\models\dependecy\Second::class,
             'alias' => '@second'
         ]
     ]    
