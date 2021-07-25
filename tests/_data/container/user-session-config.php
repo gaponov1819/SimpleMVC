@@ -4,7 +4,7 @@
  */
 $config = [
     'core' => [ // подмассив используемый самим ядром фреймворка
-        'testClass' => [ // подсистема авторизации
+        'user' => [ // подсистема авторизации
             'class' => \application\models\ExampleUser::class,
             'params' => [
                 'session' => '@session',

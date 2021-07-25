@@ -35,10 +35,10 @@ class Session extends \ItForFree\SimpleMVC\Session
     {   
         session_start();
         $this->session = &$_SESSION;
-        if (empty($this->user)){
-            $this->user['role'] = 'guest';
-            $this->user['userName'] = 'guest';
-        }   
+//        if (empty($this->user)){
+//            $this->user['role'] = 'guest';
+//            $this->user['userName'] = 'guest';
+//        }   
     }
     
 }

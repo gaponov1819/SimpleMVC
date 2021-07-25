@@ -24,27 +24,29 @@ abstract class User extends Model
 
     public function __construct($data = null, $session = null)
     {
-//       $this->Session = Config::getObject('core.session.class');
-//        $Session = $this->Session;
-//        if (!empty($Session->session['user']['role'])
-//                && !empty($Session->session['user']['userName'])) {
-//            $this->role = $Session->session['user']['role'];
-//            $this->userName = $Session->session['user']['userName'];
-//        }
-//        else {
-//            $Session->session['user']['role'] = 'guest';
-//            $Session->session['user']['userName'] = 'guest';
-//            $this->role = 'guest';
-//            $this->userName = 'guest';
-//        }
-        if (empty($session)) {
+        $this->Session = Config::getObject('core.session.class');
+        $Session = $this->Session;
+        if (!empty($Session->session['user']['role'])
+                && !empty($Session->session['user']['userName'])) {
+            $this->role = $Session->session['user']['role'];
+            $this->userName = $Session->session['user']['userName'];
+        }
+        else {
+            $Session->session['user']['role'] = 'guest';
+            $Session->session['user']['userName'] = 'guest';
             $this->role = 'guest';
             $this->userName = 'guest';
-        } else {
-            $this->role = $session->user['role'];
-            $this->userName = $session->user['userName'];
         }
         
+        
+//        if (empty($session)) {
+//            $this->role = 'guest';
+//            $this->userName = 'guest';
+//        } else {
+//            $this->role = $session->user['role'];
+//            $this->userName = $session->user['userName'];
+//        }
+//        
         parent::__construct($data);
     }
         
