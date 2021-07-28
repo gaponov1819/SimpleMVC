@@ -14,6 +14,7 @@ namespace application\models\dependecy;
 class Second {
     //put your code here
     
+    
     public $property = null;
     
     public function __construct() 

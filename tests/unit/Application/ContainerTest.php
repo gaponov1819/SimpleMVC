@@ -28,13 +28,13 @@ class ContainerTest extends \Codeception\Test\Unit
         $config = require(codecept_data_dir() . '/container/test-cache-config.php');
         $App = Application::get();
         $App->setConfiguration($config);
-        $ObjectOne = $App->getConfigObject('core.first.class');
+        $ObjectOne = $App->getConfigObject('core.firstCache.class');
         $I->assertSame(1, $ObjectOne::$countCreateObject);
-        $ObjectTwo = $App->getConfigObject('core.second.class');
+        $ObjectTwo = $App->getConfigObject('core.secondCache.class');
         $I->assertSame(2, $ObjectTwo::$countCreateObject);
-        $ObjectThree = $App->getConfigObject('core.first.class');
+        $ObjectThree = $App->getConfigObject('core.firstCache.class');
         $I->assertSame(2, $ObjectThree::$countCreateObject);
-        $ObjectFour = $App->getConfigObject('core.second.class');
+        $ObjectFour = $App->getConfigObject('core.secondCache.class');
         $I->assertSame(2, $ObjectFour::$countCreateObject);
         $a = 10;
     }   

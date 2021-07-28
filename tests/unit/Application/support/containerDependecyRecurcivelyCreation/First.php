@@ -14,10 +14,13 @@ namespace application\models\dependecy;
  */
 class First {
     //put your code here
+    static $countCreateObject = 0;
+    
     public $property = null;
     
     public function __construct()
     {
+        static::$countCreateObject++;
         $this->property = '1024';
     }
 }
