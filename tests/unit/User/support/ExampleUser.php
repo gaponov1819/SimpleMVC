@@ -1,6 +1,6 @@
 <?php
 
-namespace application\models;
+namespace application\models\user;
 
 /**
  * Пример реализации класса пользователя (реализуем требующие этого методы абстрактные методы)

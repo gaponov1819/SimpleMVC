@@ -14,12 +14,16 @@ $config = [
                 'param5' => 'param5'
             ],
             'construct' => [
-                'second' => '@second',
+                'second' => '@third',
               ],  
         ],
         'second' => [ 
             'class' => \application\models\dependecy\Second::class,
             'alias' => '@second'
+        ],
+         'third' => [ 
+            'class' => \application\models\dependecy\Third::class,
+            'alias' => '@third'
         ]
     ]    
 ];

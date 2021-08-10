@@ -147,23 +147,22 @@ class Application
 		{ 
 			return self::get()->containerElements['objects'][$inConfigArrayPath];
 		} else {
+            if (!class_exists($fullClassName)) {
+                throw new SmvcConfigException("Вы запросили получение экземпляра класса "
+                    . "$fullClassName "
+                    . " (т.к. он был добавлен в конфиг по адресу $fullClassName),"
+                    . " но такой класс не был ранее объявляен, "
+                    . "убедитесь в том, что его код подключен "
+                    . "до обращения к экземпляру объекта. ");
+            }
 
-                            if (!class_exists($fullClassName)) {
-                                throw new SmvcConfigException("Вы запросили получение экземпляра класса "
-                                    . "$fullClassName "
-                                    . " (т.к. он был добавлен в конфиг по адресу $fullClassName),"
-                                    . " но такой класс не был ранее объявляен, "
-                                    . "убедитесь в том, что его код подключен "
-                                    . "до обращения к экземпляру объекта. ");
-                            }
-                            
-                            $constructParams = self::getCounstractParams($inConfigArrayPath);
-                            $publicParams = self::getPablicParams($inConfigArrayPath);
-                            
-                            $newObject = static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
-                            self::addObjectToConteiner($inConfigArrayPath, $newObject);
-                            return $newObject;
-                        }
+            $constructParams = self::getCounstractParams($inConfigArrayPath);
+            $publicParams = self::getPablicParams($inConfigArrayPath);
+
+            $newObject = static::getInstanceOrSingletone($fullClassName, $constructParams, $publicParams);
+            self::addObjectToConteiner($inConfigArrayPath, $newObject);
+            return $newObject;
+        }
     }
     
     

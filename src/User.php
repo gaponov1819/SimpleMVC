@@ -38,7 +38,7 @@ abstract class User extends Model
             $this->userName = 'guest';
         }
         
-        
+//        
 //        if (empty($session)) {
 //            $this->role = 'guest';
 //            $this->userName = 'guest';
@@ -46,7 +46,7 @@ abstract class User extends Model
 //            $this->role = $session->user['role'];
 //            $this->userName = $session->user['userName'];
 //        }
-//        
+        
         parent::__construct($data);
     }
         

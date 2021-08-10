@@ -11,12 +11,13 @@ class UserTest extends \Codeception\Test\Unit
     
     public function testUserSessionPropertyExistsTest()
     {
-//	$I = $this->tester;
-//	
-//        $config = require(codecept_data_dir() . '/container/user-session-config.php');
-//        $App = Application::get();
-//        $App->setConfiguration($config);
-//        $User = $App->getConfigObject('core.user.class');
-//        $I->assertSame($App->getConfigObject('core.session.class'), $User->session);
+	$I = $this->tester;
+	
+        $config = require(codecept_data_dir() . 'user/user-session-config.php');
+        $App = Application::get();
+        $App->setConfiguration($config);
+        $User = $App->getConfigObject('core.user.class');
+        $UserTwo = $App->getConfigObject('core.userTestTwo.class');
+        $I->assertSame($App->getConfigObject('core.session.class'), $User->session);
     }
 }

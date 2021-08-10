@@ -1,5 +1,4 @@
 <?php
-namespace application\models\dependecy;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -7,20 +6,18 @@ namespace application\models\dependecy;
  * and open the template in the editor.
  */
 
+namespace application\models\dependecy;
+
 /**
- * Description of FirstClass
+ * Description of Third
  *
  * @author qwe
  */
-class First {
-    //put your code here
-    static $countCreateObject = 0;
-    
+class Third {
     public $third = null;
     
-    public function __construct($third = null)
+    public function __construct() 
     {
-        static::$countCreateObject++;
-        $this->third= $third;
+        $this->third = 'third';
     }
 }

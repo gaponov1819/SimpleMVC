@@ -5,7 +5,7 @@
 $config = [
     'core' => [ // подмассив используемый самим ядром фреймворка
         'user' => [ // подсистема авторизации
-            'class' => \application\models\ExampleUser::class,
+            'class' => \application\models\user\ExampleUser::class,
             'params' => [
                 'session' => '@session',
                 'param2' => 'param2',
@@ -18,9 +18,12 @@ $config = [
               ],  
         ],
         'session' => [ // подсистема работы с сессиями
-            'class' => ItForFree\SimpleMVC\Session::class,
+            'class' => application\models\user\Session::class,
             'alias' => '@session'
-        ]
+        ],
+        'userTestTwo' => [
+            'class' => \application\models\user\ExampleUser::class
+        ],        
     ]    
 ];
 
