@@ -177,11 +177,11 @@ class Application
           if (!empty($constructParams))
           {
               $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
-          } else {
-               $result = new $className;
           }
           if (!empty($publicParams)) {
             ObjectFactory::setPublicParams($result, $publicParams);
+          } else {
+               $result = new $className;
           }
        } else {
             $result =  call_user_func($className . '::' 
@@ -246,11 +246,24 @@ class Application
                     $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
                     $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
                     if (!empty($elementInConfigByParthAlias)) {
-                        $readyCounstractParams[$param] = $pathToTheDesiredElement;
+                        $readyCounstractParams[$param] = static::getInstanceOrSingletone($elementInConfigByParthAlias);
+                        $a = 63463;
                     } 
                 }
             }
         }   
         return $readyCounstractParams; 
+    }
+    
+    
+    public function getInstanceByAlias()
+    {
+        //возвращает объект или элемент взависимости от того, есть ли в конфиге у переданного пукти часть "класс".
+        //Вызывает isClassOrSimpleElement как раз для этой проверки
+    }
+    
+    public function isClassOrSimpleElement()
+    {
+        
     }
 }

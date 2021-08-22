@@ -17,7 +17,7 @@ class UserTest extends \Codeception\Test\Unit
         $App = Application::get();
         $App->setConfiguration($config);
         $User = $App->getConfigObject('core.user.class');
-        $UserTwo = $App->getConfigObject('core.userTestTwo.class');
+//        $UserTwo = $App->getConfigObject('core.userTestTwo.class');
         $I->assertSame($App->getConfigObject('core.session.class'), $User->session);
     }
 }
