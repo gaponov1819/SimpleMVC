@@ -3,7 +3,6 @@
 use ItForFree\SimpleMVC\Application;
 
 require __DIR__ . '/support/ExampleUser.php';
-require __DIR__ . '/support/Session.php';
 
 class UserTest extends \Codeception\Test\Unit
 {
@@ -17,7 +16,7 @@ class UserTest extends \Codeception\Test\Unit
         $App = Application::get();
         $App->setConfiguration($config);
         $User = $App->getConfigObject('core.user.class');
-//        $UserTwo = $App->getConfigObject('core.userTestTwo.class');
-        $I->assertSame($App->getConfigObject('core.session.class'), $User->session);
+        $I->assertSame($App->getConfigObject('core.session.class'), $User->Session);
+        $I->assertSame($App->getConfigObject('core.router.class'), $User->router);
     }
 }

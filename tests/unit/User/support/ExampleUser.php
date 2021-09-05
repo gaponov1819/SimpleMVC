@@ -2,15 +2,11 @@
 
 namespace application\models\user;
 
-/**
- * Пример реализации класса пользователя (реализуем требующие этого методы абстрактные методы)
- * Эту модель наследуем от специального класа-модели User из ядра SimpleMVC
- */
 class ExampleUser extends \ItForFree\SimpleMVC\User 
 {
-    public function __construct()
+    public function __construct($data = null, $session = null, $router = null)
     {
-        parent::__construct(); 
+        parent::__construct($data, $session, $router); 
     }
     
     protected function checkAuthData($login, $pass) 

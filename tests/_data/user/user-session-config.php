@@ -7,7 +7,6 @@ $config = [
         'user' => [ // подсистема авторизации
             'class' => \application\models\user\ExampleUser::class,
             'params' => [
-                'session' => '@session',
                 'param2' => 'param2',
                 'param3' => 'param3',
                 'param4' => 'param4',
@@ -15,15 +14,20 @@ $config = [
             ],
             'construct' => [
                 'session' => '@session',
+                'router' => '@router'
               ],  
         ],
         'session' => [ // подсистема работы с сессиями
-            'class' => application\models\user\Session::class,
+            'class' => ItForFree\SimpleMVC\Session::class,
             'alias' => '@session'
         ],
         'userTestTwo' => [
             'class' => \application\models\user\ExampleUser::class
-        ],        
+        ],
+        'router' => [ // подсистема маршрутизация
+            'class' => \ItForFree\SimpleMVC\Router::class,
+            'alias' => '@router'
+        ],
     ]    
 ];
 

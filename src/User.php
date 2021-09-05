@@ -21,9 +21,16 @@ abstract class User extends Model
      */
     public $Session = null;
     
+    /**
+     * Для использования роутера
+     * @var type \ItForFree\SimpleMVC\Router::class
+     */
+    public $router = null;
+    
 
-    public function __construct($data = null, $session = null)
+    public function __construct($data = null, $session = null, $router = null)
     {
+        $this->router = $router;
         $this->Session = $session;
         $Session = $this->Session;
         if (!empty($Session->session['user']['role'])
@@ -37,15 +44,6 @@ abstract class User extends Model
             $this->role = 'guest';
             $this->userName = 'guest';
         }
-        
-//        
-//        if (empty($session)) {
-//            $this->role = 'guest';
-//            $this->userName = 'guest';
-//        } else {
-//            $this->role = $session->user['role'];
-//            $this->userName = $session->user['userName'];
-//        }
         
         parent::__construct($data);
     }

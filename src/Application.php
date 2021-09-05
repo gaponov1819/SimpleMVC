@@ -178,7 +178,7 @@ class Application
           {
               $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
           }
-          if (!empty($publicParams)) {
+          else if (!empty($publicParams)) {
             ObjectFactory::setPublicParams($result, $publicParams);
           } else {
                $result = new $className;
@@ -216,14 +216,7 @@ class Application
         if (!empty($params)) {
             foreach($params as $param) {
                 if (static::isAlias($param)) {
-                    $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
-                    $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
-                    $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
-                    if (!empty($elementInConfigByParthAlias)) {
-                        $publicParams[substr($param, 1)] = self::getConfigObject($pathToTheDesiredElement);
-                    } else {
-                        $publicParams[] = $pathToTheDesiredElement;
-                    }  
+                        $publicParams[substr($param, 1)] = self::getInstanceByAlias($param);
                 }
             }
         }
@@ -242,13 +235,7 @@ class Application
         {
             foreach($constructParams as $param) {
                 if (static::isAlias($param)) {
-                    $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
-                    $pathToTheDesiredElement = implode('.', $pathToTheDesiredElement) . '.class';
-                    $elementInConfigByParthAlias = self::getConfigElement($pathToTheDesiredElement, false);
-                    if (!empty($elementInConfigByParthAlias)) {
-                        $readyCounstractParams[$param] = static::getInstanceOrSingletone($elementInConfigByParthAlias);
-                        $a = 63463;
-                    } 
+                        $readyCounstractParams[substr($param, 1)] = self::getInstanceByAlias($param);
                 }
             }
         }   
@@ -256,14 +243,32 @@ class Application
     }
     
     
-    public function getInstanceByAlias()
+    /*
+     * Возвращает объект или элемент, созданный
+     * на основе переданного параметр
+     */
+    public static function getInstanceByAlias($param)
     {
-        //возвращает объект или элемент взависимости от того, есть ли в конфиге у переданного пукти часть "класс".
+        //возвращает объект или элемент взависимости от того, есть ли в конфиге у переданного пути часть "класс".
         //Вызывает isClassOrSimpleElement как раз для этой проверки
+        $pathToTheDesiredElement = Structure::getPathForElementWithValue(self::get()->config, 'alias', $param);
+        if(self::isClassOrSimpleElement($pathToTheDesiredElement)) {
+            return self::getConfigObject(implode('.', $pathToTheDesiredElement) . '.class');
+        } else {
+            return self::getConfigElement(implode('.', $pathToTheDesiredElement));
+        }
+        
+            
     }
     
-    public function isClassOrSimpleElement()
-    {
-        
+    /*
+     * Проверяет: можно ли создать объект класса по переданному пути или нет
+     * Возвращает true/false
+     */
+    public static function isClassOrSimpleElement($paramPath)
+    {       
+        $pathToClass = implode('.', $paramPath) . '.class';
+        $class = self::getConfigElement($pathToClass, false);
+        return !empty($class);
     }
 }
