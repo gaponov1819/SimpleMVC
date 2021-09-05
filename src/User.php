@@ -115,9 +115,9 @@ abstract class User extends Model
     public function isAllowed($route)
     {
         $result = true;
-        $Router = Config::getObject('core.router.class');
+//        $this->router = Config::getObject('core.router.class');
         
-        $controllerName = $Router->getControllerClassName($route);
+        $controllerName = $this->router->getControllerClassName($route);
         
         if (!class_exists($controllerName)) {
             throw new SmvcUsageException("Контроллер '$controllerName',"
@@ -127,7 +127,7 @@ abstract class User extends Model
         } else {
         
             $controller = new $controllerName();
-            $actionName = $Router->getControllerActionName($route);
+            $actionName = $this->router->getControllerActionName($route);
             $result = $controller->isEnabled($actionName);
         }
         
@@ -156,11 +156,11 @@ abstract class User extends Model
      */
     public function explainAccess($route)
     {
-        $Router = Config::getObject('core.router.class');
+//        $Router = Config::getObject('core.router.class');
         $role = $this->role;
-        $hypoControllerName = $Router->getControllerClassName($route);
+        $hypoControllerName = $this->router->getControllerClassName($route);
         $controllerExists = class_exists($hypoControllerName);
-        $actionName = $Router->getControllerActionName($route);
+        $actionName = $this->router->getControllerActionName($route);
         $methodName = 'имя метода не найдено';
         $methodExists = false;
         $rules = 'правил не найдено';
@@ -170,7 +170,7 @@ abstract class User extends Model
         if ($controllerExists) {
             $controller = new $hypoControllerName();
             $rules = $controller->getRules(); 
-            $methodName =  $Router->getControllerMethodName($actionName);
+            $methodName =  $this->router->getControllerMethodName($actionName);
             $methodExists = method_exists($controller, $methodName);
             $access = $controller->isEnabled($actionName);
             $explanation = $controller->explanation;
