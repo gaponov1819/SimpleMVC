@@ -12,10 +12,6 @@ use ItForFree\rusphp\Log\SimpleEchoLog;
  */
 class Model 
 {
-    /**
-     * @var object Хранит соединение с БД
-     */
-    public $pdo;
    
     /**
      * @var string Имя обрабатываемой таблицы 
