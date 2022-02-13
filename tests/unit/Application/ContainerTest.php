@@ -5,13 +5,13 @@ use ItForFree\SimpleMVC\Application;
 require __DIR__ . '/support/containerElementsCaching/OneClassCache.php';
 require __DIR__ . '/support/containerDependecyRecurcivelyCreation/First.php';
 require __DIR__ . '/support/containerDependecyRecurcivelyCreation/Second.php';
+require __DIR__ . '/support/containerDependecyRecurcivelyCreation/Third.php';
 
 
 class ContainerTest extends \Codeception\Test\Unit
 {
     protected $tester;
-    
-        // tests  
+      
     public function testCreateDependecyRecurcivelyTest()
     {
 	$I = $this->tester;
@@ -19,7 +19,7 @@ class ContainerTest extends \Codeception\Test\Unit
         $App = Application::get();
         $App->setConfiguration($config);
         $First = $App->getConfigObject('core.first.class');
-        $I->assertSame($App->getConfigObject('core.second.class'), $First->second);
+        $I->assertSame($App->getConfigObject('core.third.class'), $First->third);
     }
     
     public function testCachingTest()
@@ -37,7 +37,6 @@ class ContainerTest extends \Codeception\Test\Unit
         $I->assertSame(2, $ObjectThree::$countCreateObject);
         $ObjectFour = $App->getConfigObject('core.secondCache.class');
         $I->assertSame(2, $ObjectFour::$countCreateObject);
-        $a = 10;
     }   
   
 }

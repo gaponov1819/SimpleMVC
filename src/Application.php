@@ -145,7 +145,7 @@ class Application
         $currentConteiner = self::get()->containerElements;
         if (isset(self::get()->containerElements['objects'][$inConfigArrayPath])) 
 		{ 
-			return self::get()->containerElements['objects'][$inConfigArrayPath];
+		    return self::get()->containerElements['objects'][$inConfigArrayPath];
 		} else {
             if (!class_exists($fullClassName)) {
                 throw new SmvcConfigException("Вы запросили получение экземпляра класса "
