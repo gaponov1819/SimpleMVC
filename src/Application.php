@@ -171,18 +171,21 @@ class Application
 		$constructParams = [],
 		$publicParams = [], 
 		$singletoneInstanceAccessStaticMethodName = 'get')
-    {
+    { 
        $result = null;
        if (\ItForFree\rusphp\PHP\Object\ObjectClass\Constructor::isPublic($className)) {
+
           if (!empty($constructParams))
           {
-              $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
-          }
-          else if (!empty($publicParams)) {
-            ObjectFactory::setPublicParams($result, $publicParams);
+             $result = ObjectFactory::createObjectByConstruct($className, $constructParams);
           } else {
                $result = new $className;
           }
+	  
+	  if (!empty($publicParams)) {
+            ObjectFactory::setPublicParams($result, $publicParams);
+          } 
+	  
        } else {
             $result =  call_user_func($className . '::' 
                 . $singletoneInstanceAccessStaticMethodName); 
